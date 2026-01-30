@@ -1,5 +1,5 @@
 const tg = window.Telegram.WebApp;
-const BACKEND_URL = "http://127.0.0.1:8080";
+const BACKEND_URL = "https://roundly-unmedicinal-annalise.ngrok-free.dev";
 
 // Initialize Telegram WebApp
 tg.expand();
@@ -18,6 +18,7 @@ const elements = {
     // Sheet Modals
     overlay: document.getElementById('purchase-sheet-overlay'),
     sheet: document.getElementById('purchase-sheet'),
+    depositSheet: document.getElementById('deposit-sheet'),
 
     // Sheet Content
     sheetTitle: document.getElementById('sheet-title'),
@@ -27,7 +28,12 @@ const elements = {
 
     // Inputs/Buttons
     playerIdInput: document.getElementById('player-id'),
-    confirmBtn: document.getElementById('confirm-btn')
+    confirmBtn: document.getElementById('confirm-btn'),
+    depositAmount: document.getElementById('deposit-amount'),
+
+    // Profile Elements
+    profileBalance: document.getElementById('profile-balance'),
+    profileUserId: document.getElementById('profile-user-id')
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -52,7 +58,7 @@ async function initApp() {
     renderSkeletons();
 
     // Setup Listeners
-    elements.overlay.addEventListener('click', closeSheet);
+    elements.overlay.addEventListener('click', closeAllSheets);
     elements.confirmBtn.addEventListener('click', handlePurchase);
 
     // Fetch Data
@@ -115,6 +121,83 @@ async function fetchCatalog() {
     }
 }
 
+// Tab Switching
+function switchTab(tab) {
+    document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+    if (tab === 'home') {
+        document.getElementById('view-home').classList.remove('hidden');
+        document.getElementById('nav-home').classList.add('active');
+    } else if (tab === 'profile') {
+        document.getElementById('view-profile').classList.remove('hidden');
+        document.getElementById('nav-profile').classList.add('active');
+        // Update profile data in case balance changed
+        if (currentUser) {
+            elements.profileBalance.innerText = formatPrice(currentUser.balance);
+            elements.profileUserId.innerText = currentUser.id;
+        }
+    }
+}
+
+// Deposit Logic
+function openDeposit() {
+    elements.overlay.classList.remove('hidden');
+    elements.depositSheet.classList.remove('hidden');
+}
+
+async function handleDeposit() {
+    const amount = parseInt(elements.depositAmount.value);
+    const btn = document.getElementById('deposit-confirm-btn');
+
+    // UI Loading
+    const originalText = btn.innerHTML;
+    btn.innerHTML = `<i class="ri-loader-4-line" style="animation: spin 1s linear infinite"></i> Processing`;
+    btn.disabled = true;
+
+    try {
+        const payload = {
+            user_id: currentUser.id,
+            amount: amount,
+            ref_id: "DEP-" + Date.now()
+        };
+
+        const response = await fetch(`${BACKEND_URL}/api/deposit`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "ngrok-skip-browser-warning": "true"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            currentUser.balance = result.new_balance;
+            elements.balance.innerText = formatPrice(result.new_balance);
+            elements.profileBalance.innerText = formatPrice(result.new_balance);
+
+            showToast(`Successfully added ${formatPrice(amount)}`, "success");
+            closeAllSheets();
+            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+        } else {
+            showToast("Deposit Failed", "error");
+        }
+    } catch (e) {
+        showToast("Connection Error", "error");
+    } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }
+}
+
+function closeAllSheets() {
+    elements.overlay.classList.add('hidden');
+    elements.sheet.classList.add('hidden');
+    elements.depositSheet.classList.add('hidden');
+    elements.playerIdInput.blur();
+}
+
 function renderCatalog(items) {
     elements.skeleton.classList.add('hidden');
     elements.catalog.classList.remove('hidden');
@@ -124,12 +207,17 @@ function renderCatalog(items) {
         const card = document.createElement("div");
         card.className = "product-card fade-in";
 
-        // Format price
+        // Brand Icons
+        let iconClass = "ri-gamepad-line";
+        if (item.brand.includes("Mobile Legends")) iconClass = "ri-sword-line";
+        if (item.brand.includes("Free Fire")) iconClass = "ri-fire-line";
+        if (item.brand.includes("PUBG")) iconClass = "ri-target-line";
+
         const price = formatPrice(item.price_uzs);
 
         card.innerHTML = `
-            <i class="ri-gamepad-line card-icon"></i>
-            <div class="card-brand">${item.brand || "Game"}</div>
+            <i class="${iconClass} card-icon"></i>
+            <div class="card-brand">${item.brand}</div>
             <div class="card-title">${item.product_name}</div>
             <div class="card-price">${price}</div>
         `;
@@ -139,119 +227,3 @@ function renderCatalog(items) {
     });
 }
 
-// Bottom Sheet Logic
-function openSheet(item) {
-    selectedItem = item;
-
-    elements.sheetTitle.innerText = item.product_name;
-    elements.sheetBrand.innerText = item.brand || "Game Voucher";
-    elements.sheetPrice.innerText = formatPrice(item.price_uzs);
-    elements.playerIdInput.value = "";
-
-    elements.overlay.classList.remove('hidden');
-    elements.sheet.classList.remove('hidden'); // Triggers slide-up via CSS
-
-    // Haptic Feedback
-    if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-}
-
-function closeSheet() {
-    elements.overlay.classList.add('hidden');
-    elements.sheet.classList.add('hidden');
-    elements.playerIdInput.blur();
-}
-
-// Purchase Logic
-async function handlePurchase() {
-    const playerId = elements.playerIdInput.value.trim();
-    if (!playerId) {
-        showToast("Enter your Player ID", "error");
-        elements.playerIdInput.focus();
-        if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
-        return;
-    }
-
-    // UI Loading State
-    const btnContent = elements.confirmBtn.innerHTML;
-    elements.confirmBtn.innerHTML = `<i class="ri-loader-4-line" style="animation: spin 1s linear infinite"></i> Processing...`;
-    elements.confirmBtn.disabled = true;
-
-    try {
-        if (!currentUser) {
-            showToast("Please restart the app", "error");
-            return;
-        }
-
-        const payload = {
-            user_id: currentUser.id,
-            item_sku: selectedItem.buyer_sku_code,
-            player_id: playerId
-        };
-
-        const response = await fetch(`${BACKEND_URL}/api/buy`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            closeSheet();
-            showToast("Purchase Successful!", "success");
-            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-        } else {
-            showToast(result.error || "Transaction Failed", "error");
-            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
-        }
-
-    } catch (error) {
-        showToast("Connection Error", "error");
-    } finally {
-        elements.confirmBtn.innerHTML = btnContent;
-        elements.confirmBtn.disabled = false;
-    }
-}
-
-// Utilities
-function showToast(message, type = "success") {
-    const container = document.getElementById('toast-container');
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-
-    const icon = type === 'success' ? 'ri-checkbox-circle-fill' : 'ri-error-warning-fill';
-
-    toast.innerHTML = `
-        <i class="${icon}" style="color: var(--${type === 'success' ? 'secondary' : 'danger'}); font-size: 1.2rem;"></i>
-        <span>${message}</span>
-    `;
-
-    container.appendChild(toast);
-
-    // Remove after 3s
-    setTimeout(() => {
-        toast.style.animation = "fade-out-up 0.4s forwards";
-        setTimeout(() => toast.remove(), 400);
-    }, 3000);
-}
-
-function formatPrice(amount) {
-    return new Intl.NumberFormat('uz-UZ', { style: 'currency', currency: 'UZS', maximumFractionDigits: 0 }).format(amount);
-}
-
-function filterCategory(cat) {
-    // Visual toggle only for demo
-    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-    event.target.classList.add('active');
-
-    // Real logic would re-fetch or filter local items
-    const cards = document.querySelectorAll('.product-card');
-    cards.forEach(card => card.style.display = 'flex'); // Reset
-
-    if (cat === 'Vouchers') {
-        // Just a mock filter effect
-        cards.forEach((card, index) => {
-            if (index % 2 === 0) card.style.display = 'none';
-        });
-    }
-}

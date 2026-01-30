@@ -545,3 +545,161 @@ main {
     animation: fade-in 0.6s ease-out 0.2s forwards;
     opacity: 0;
 }
+
+.fade-in-delay-3 {
+    animation: fade-in 0.6s ease-out 0.3s forwards;
+    opacity: 0;
+}
+
+/* Coming Soon */
+.coming-soon {
+    margin-top: 30px;
+    margin-bottom: 80px;
+}
+
+.coming-soon-card {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border: 1px dashed var(--border-glass);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: var(--text-muted);
+}
+
+.coming-soon-card i {
+    font-size: 2rem;
+    color: var(--secondary);
+    opacity: 0.5;
+}
+
+/* Profile View */
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.language-select select {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    outline: none;
+}
+
+.balance-card {
+    background: linear-gradient(135deg, var(--primary) 0%, #2a0055 100%);
+    border-radius: 24px;
+    padding: 30px 20px;
+    text-align: center;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(112, 0, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.balance-card p {
+    margin: 0;
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
+
+.balance-card h1 {
+    font-size: 2.5rem;
+    margin: 10px 0;
+    font-weight: 700;
+}
+
+.balance-card .user-id {
+    opacity: 0.6;
+    margin-bottom: 24px;
+    font-family: monospace;
+    background: rgba(0, 0, 0, 0.2);
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+}
+
+.btn-deposit {
+    background: white;
+    color: var(--primary);
+    border: none;
+    padding: 14px 28px;
+    border-radius: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s;
+}
+
+.btn-deposit:active {
+    transform: scale(0.95);
+}
+
+.profile-menu {
+    border-top: 1px solid var(--border-glass);
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border-glass);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.menu-item:hover {
+    color: white;
+}
+
+.menu-item i {
+    font-size: 1.4rem;
+    color: var(--secondary);
+}
+
+/* Credit Card Mock */
+.credit-card-mock {
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    border-radius: 16px;
+    padding: 24px;
+    color: white;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.card-logo {
+    font-weight: 800;
+    font-style: italic;
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    text-align: right;
+}
+
+.card-number {
+    font-family: monospace;
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.card-holder {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}

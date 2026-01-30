@@ -29,7 +29,7 @@
             </div>
         </header>
 
-        <main>
+        <div id="view-home" class="view-section active">
             <!-- Hero Section -->
             <section class="hero-section fade-in">
                 <div class="hero-card">
@@ -55,16 +55,58 @@
 
             <!-- Product Grid -->
             <section class="products-section fade-in-delay-2">
-                <div id="loading-skeleton" class="grid">
-                    <!-- Skeletons injected by JS -->
-                </div>
-                <div id="catalog" class="grid hidden">
-                    <!-- Products injected by JS -->
+                <div id="loading-skeleton" class="grid"></div>
+                <div id="catalog" class="grid hidden"></div>
+            </section>
+
+            <!-- Coming Soon -->
+            <section class="coming-soon fade-in-delay-3">
+                <div class="coming-soon-card">
+                    <i class="ri-rocket-2-fill"></i>
+                    <div>
+                        <h4>More Games Coming Soon</h4>
+                        <p>Valorant, Genshin, and more!</p>
+                    </div>
                 </div>
             </section>
-        </main>
+        </div>
 
-        <!-- Bottom Sheet Modal for Purchase -->
+        <!-- PROFLIE VIEW -->
+        <div id="view-profile" class="view-section hidden">
+            <div class="profile-header">
+                <h2>My Cabinet</h2>
+                <div class="language-select">
+                    <i class="ri-global-line"></i>
+                    <select>
+                        <option>🇺🇸 English</option>
+                        <option>🇷🇺 Русский</option>
+                        <option>🇺🇿 O'zbek</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="balance-card">
+                <p>Your Balance</p>
+                <h1 id="profile-balance">0 UZS</h1>
+                <div class="user-id">ID: <span id="profile-user-id">...</span></div>
+                <button class="btn-deposit" onclick="openDeposit()">
+                    <i class="ri-add-circle-line"></i> Top Up Balance
+                </button>
+            </div>
+
+            <div class="profile-menu">
+                <div class="menu-item">
+                    <i class="ri-history-line"></i>
+                    <span>Transaction History</span>
+                </div>
+                <div class="menu-item">
+                    <i class="ri-customer-service-2-line"></i>
+                    <span>Support</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Purchase Modal -->
         <div id="purchase-sheet-overlay" class="overlay hidden"></div>
         <div id="purchase-sheet" class="bottom-sheet hidden">
             <div class="sheet-handle"></div>
@@ -74,7 +116,7 @@
                         <i class="ri-vip-diamond-fill"></i>
                     </div>
                     <div class="product-info">
-                        <h3 id="sheet-title">Product Name</h3>
+                        <h3 id="sheet-title">Product</h3>
                         <p class="brand" id="sheet-brand">Brand</p>
                     </div>
                 </div>
@@ -83,32 +125,45 @@
 
             <div class="sheet-body">
                 <div class="input-group">
-                    <label for="player-id">
-                        <i class="ri-user-star-line"></i> Player ID
-                    </label>
-                    <input type="number" id="player-id" placeholder="e.g. 12345678" pattern="\d*">
-                </div>
-
-                <div class="info-note">
-                    <i class="ri-information-line"></i>
-                    <span>Instant delivery via ID. No logic required.</span>
+                    <label>Player ID</label>
+                    <input type="number" id="player-id" placeholder="e.g. 12345678">
                 </div>
             </div>
 
             <div class="sheet-footer">
-                <button id="confirm-btn" class="btn-primary">
-                    <span>Purchase Now</span>
-                    <i class="ri-arrow-right-line"></i>
+                <button id="confirm-btn" class="btn-primary"><span>Purchase Now</span></button>
+            </div>
+        </div>
+
+        <!-- Deposit Modal -->
+        <div id="deposit-sheet" class="bottom-sheet hidden">
+            <div class="sheet-handle"></div>
+            <div class="sheet-header">
+                <h3>Top Up Balance</h3>
+            </div>
+            <div class="sheet-body">
+                <div class="credit-card-mock">
+                    <div class="card-logo">VISA</div>
+                    <div class="card-number">#### #### #### 1234</div>
+                    <div class="card-holder">Testing Payment</div>
+                </div>
+                <div class="input-group" style="margin-top: 20px;">
+                    <label>Amount (UZS)</label>
+                    <input type="number" id="deposit-amount" placeholder="50000" value="50000">
+                </div>
+            </div>
+            <div class="sheet-footer">
+                <button id="deposit-confirm-btn" class="btn-primary" onclick="handleDeposit()">
+                    <span>Pay Now</span>
                 </button>
             </div>
         </div>
 
-        <!-- Toast Notification Container -->
         <div id="toast-container"></div>
 
-        <!-- Bottom Navigation -->
+        <!-- Navbar -->
         <nav class="bottom-nav">
-            <a href="#" class="nav-item active">
+            <a href="#" class="nav-item active" id="nav-home" onclick="switchTab('home')">
                 <i class="ri-home-5-line"></i>
                 <span>Home</span>
             </a>
@@ -120,7 +175,7 @@
                 <i class="ri-history-line"></i>
                 <span>History</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="#" class="nav-item" id="nav-profile" onclick="switchTab('profile')">
                 <i class="ri-user-3-line"></i>
                 <span>Profile</span>
             </a>

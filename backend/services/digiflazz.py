@@ -126,26 +126,28 @@ class DigiflazzClient:
             API response containing list of products with prices.
             Example: {"data": [{"product_name": "...", "price": 10000, ...}]}
         """
-        signature = self._generate_signature()
-        
-        payload = {
-            "cmd": cmd,
-            "username": self._username,
-            "sign": signature
-        }
-        
-        if category:
-            payload["category"] = category
-        
-        logger.info(f"Fetching price list: cmd={cmd}, category={category}")
-        
-        try:
-            response = await self._make_request("/price-list", payload)
-            logger.info(f"Price list retrieved: {len(response.get('data', []))} items")
-            return response
-        except aiohttp.ClientError as e:
-            logger.error(f"Failed to fetch price list: {e}")
-            raise
+        """
+        Retrieve the price list.
+        MOCKED: Returns hardcoded data for Mobile Legends, Free Fire, and PUBG.
+        """
+        # Static Mock Data
+        mock_items = [
+            # Mobile Legends
+            {"product_name": "Weekly Diamond Pass", "category": "Games", "brand": "Mobile Legends", "price": 24000, "buyer_sku_code": "mlbb_wdp", "desc": "Fast Delivery"},
+            {"product_name": "86 Diamonds", "category": "Games", "brand": "Mobile Legends", "price": 12500, "buyer_sku_code": "mlbb_86", "desc": "Instant"},
+            {"product_name": "172 Diamonds", "category": "Games", "brand": "Mobile Legends", "price": 25000, "buyer_sku_code": "mlbb_172", "desc": "Bonus +10"},
+            
+            # Free Fire
+            {"product_name": "100 Diamonds", "category": "Games", "brand": "Free Fire", "price": 11000, "buyer_sku_code": "ff_100", "desc": "ID Only"},
+            {"product_name": "310 Diamonds", "category": "Games", "brand": "Free Fire", "price": 32000, "buyer_sku_code": "ff_310", "desc": "Fast"},
+
+            # PUBG Mobile
+            {"product_name": "60 UC", "category": "Games", "brand": "PUBG Mobile", "price": 11500, "buyer_sku_code": "pubg_60", "desc": "Global"},
+            {"product_name": "325 UC", "category": "Games", "brand": "PUBG Mobile", "price": 58000, "buyer_sku_code": "pubg_325", "desc": "Global"},
+        ]
+
+        logger.info(f"Returning {len(mock_items)} mock items")
+        return {"data": mock_items}
     
     async def create_transaction(
         self,

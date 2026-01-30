@@ -425,67 +425,144 @@
         .toast.error i {
             color: #ff0055;
         }
+
+        /* PRODUCTS LIST */
+        .products-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            padding-bottom: 20px;
+        }
+
+        .product-item {
+            background: #252540;
+            /* Slightly lighter than card */
+            padding: 16px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .product-item:active {
+            transform: scale(0.98);
+            background: #2f2f50;
+        }
+
+        .prod-icon {
+            font-size: 1.5rem;
+        }
+
+        .prod-info {
+            flex: 1;
+        }
+
+        .prod-name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .prod-price {
+            color: var(--secondary);
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        /* CHECKOUT */
+        .checkout-summary {
+            background: rgba(88, 71, 255, 0.1);
+            border: 1px solid var(--primary);
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .checkout-item-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .checkout-price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--gold);
+        }
+
+        .sheet-handle {
+            width: 40px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            margin: -10px auto 20px;
+        }
     </style>
 </head>
 
 <body>
 
     <div id="app">
-        <!-- HEADER -->
-        <header class="header">
-            <div class="user-info">
-                <div class="avatar" id="avatar">
-                    <i class="ri-user-smile-line"></i>
-                    <img id="avatar-img" src="" style="display:none; width:100%; height:100%;">
+        <div id="app-content">
+            <!-- HEADER -->
+            <header class="header">
+                <div class="user-info">
+                    <div class="avatar" id="avatar">
+                        <i class="ri-user-smile-line"></i>
+                        <img id="avatar-img" src="" style="display:none; width:100%; height:100%;">
+                    </div>
+                    <div class="username" id="username">Guest</div>
                 </div>
-                <div class="username" id="username">Guest</div>
-            </div>
-            <div class="balance-badge">
-                <i class="ri-copper-coin-fill coin-icon"></i>
-                <span id="balance">0</span>
-            </div>
-        </header>
+                <div class="balance-badge">
+                    <i class="ri-copper-coin-fill coin-icon"></i>
+                    <span id="balance">0</span>
+                </div>
+            </header>
 
-        <!-- ACTION BUTTONS -->
-        <div class="actions-grid">
-            <div class="action-btn" onclick="openDeposit()">
-                <div class="action-icon"><i class="ri-wallet-3-fill"></i></div>
-                <div class="action-text">Hisobni<br>to'ldirish</div>
+            <!-- ACTION BUTTONS -->
+            <div class="actions-grid">
+                <div class="action-btn" onclick="openDeposit()">
+                    <div class="action-icon"><i class="ri-wallet-3-fill"></i></div>
+                    <div class="action-text">Hisobni<br>to'ldirish</div>
+                </div>
+                <div class="action-btn">
+                    <div class="action-icon" style="background: rgba(0, 224, 255, 0.1); color: var(--secondary);"><i
+                            class="ri-gift-2-fill"></i></div>
+                    <div class="action-text">Bonus<br>kodlar</div>
+                </div>
+                <div class="action-btn">
+                    <div class="action-icon" style="background: rgba(255, 0, 85, 0.1); color: var(--accent);"><i
+                            class="ri-history-fill"></i></div>
+                    <div class="action-text">To'lov<br>tarixi</div>
+                </div>
             </div>
-            <div class="action-btn">
-                <div class="action-icon" style="background: rgba(0, 224, 255, 0.1); color: var(--secondary);"><i
-                        class="ri-gift-2-fill"></i></div>
-                <div class="action-text">Bonus<br>kodlar</div>
-            </div>
-            <div class="action-btn">
-                <div class="action-icon" style="background: rgba(255, 0, 85, 0.1); color: var(--accent);"><i
-                        class="ri-history-fill"></i></div>
-                <div class="action-text">To'lov<br>tarixi</div>
-            </div>
-        </div>
 
-        <!-- BANNER -->
-        <div class="banner-container">
-            <div class="banner">
-                <h2>Double Promo</h2>
-                <p>Get 2x UC on first deposit!</p>
-                <div class="banner-glow"></div>
+            <!-- BANNER -->
+            <div class="banner-container">
+                <div class="banner">
+                    <h2>Double Promo</h2>
+                    <p>Get 2x UC on first deposit!</p>
+                    <div class="banner-glow"></div>
+                </div>
             </div>
-        </div>
 
-        <!-- TABS -->
-        <div class="tabs-container">
-            <div class="segment-control">
-                <div class="segment-btn active">ID</div>
-                <div class="segment-btn">Promo kod</div>
-                <div class="segment-btn">Avto (24/7)</div>
+            <!-- TABS -->
+            <div class="tabs-container">
+                <div class="segment-control">
+                    <div class="segment-btn active">ID</div>
+                    <div class="segment-btn">Promo kod</div>
+                    <div class="segment-btn">Avto (24/7)</div>
+                </div>
             </div>
-        </div>
 
-        <!-- GAMES -->
-        <h3 class="section-header">Mashhur e'lonlar</h3>
-        <div class="games-grid" id="catalog">
-            <!-- Rendered via JS -->
+            <!-- GAMES -->
+            <h3 class="section-header">Mashhur e'lonlar</h3>
+            <div class="games-grid" id="catalog">
+                <!-- Rendered via JS -->
+            </div>
         </div>
     </div>
 
@@ -515,14 +592,28 @@
     <!-- Deposit Sheet -->
     <div class="sheet" id="deposit-sheet">
         <div class="sheet-title">Hisobni to'ldirish</div>
-        <input type="number" id="deposit-amount" class="input-box" placeholder="Summani kiriting (UZS)">
+        <input type="number" id="deposit-amount" class="input-box" placeholder="Summani kiriting (UZS)"
+            inputmode="numeric">
         <button class="btn-main" onclick="processDeposit()">To'lash</button>
     </div>
 
-    <!-- Buy Sheet -->
-    <div class="sheet" id="buy-sheet">
-        <div class="sheet-title" id="buy-title">Product</div>
-        <input type="number" id="player-id" class="input-box" placeholder="Player ID">
+    <!-- Product Selection Sheet (Catalog) -->
+    <div class="sheet" id="products-sheet" style="height: 70vh;">
+        <div class="sheet-handle"></div>
+        <div class="sheet-title" id="game-title-products">Kategoriyalar</div>
+        <div class="products-grid" id="products-grid">
+            <!-- Products rendered here -->
+        </div>
+    </div>
+
+    <!-- Checkout Sheet -->
+    <div class="sheet" id="checkout-sheet">
+        <div class="sheet-title">Xarid qilish</div>
+        <div class="checkout-summary">
+            <div class="checkout-item-name" id="checkout-item">Unknown Item</div>
+            <div class="checkout-price" id="checkout-price">0 UZS</div>
+        </div>
+        <input type="text" id="player-id" class="input-box" placeholder="Player ID kiriting">
         <button class="btn-main" onclick="processBuy()">Sotib olish</button>
     </div>
 
@@ -535,81 +626,184 @@
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
+        tg.enableClosingConfirmation();
 
-        // STATE
-        const state = {
-            user: { id: 0, name: "Guest", balance: 0 },
-            catalog: [
-                { id: 1, name: "PUBG Mobile", type: "UC", image: "https://wallpapers.com/images/hd/pubg-mobile-4k-3840-x-2160-wallpaper-z6o6e6k6k6k6k6k6.jpg", color: "#fca311" },
-                { id: 2, name: "Free Fire", type: "Diamonds", image: "https://wallpapers.com/images/hd/garena-free-fire-4k-gaming-wallpaper-7c7c7c7c7c7c7c7c.jpg", color: "#ffaa00" },
-                { id: 3, name: "Mobile Legends", type: "Diamonds", image: "https://wallpapers.com/images/hd/mobile-legends-bang-bang-4k-wallpaper-5e5e5e5e5e5e5e5e.jpg", color: "#bd00ff" },
-                { id: 4, name: "Brawl Stars", type: "Gems", image: "https://wallpapers.com/images/hd/brawl-stars-4k-wallpaper-4k4k4k4k4k4k4k4.jpg", color: "#00e0ff" }
+        // MOCK DATA
+        const DB = {
+            user: { id: 123456, name: "Guest", balance: 0 },
+            history: [],
+            games: [
+                {
+                    id: 1, name: "PUBG Mobile", color: "#fca311",
+                    products: [
+                        { name: "60 UC", price: 11500, icon: "💎" },
+                        { name: "325 UC", price: 58000, icon: "💎" },
+                        { name: "660 UC", price: 115000, icon: "💰" },
+                        { name: "1800 UC", price: 280000, icon: "📦" }
+                    ]
+                },
+                {
+                    id: 2, name: "Free Fire", color: "#ffaa00",
+                    products: [
+                        { name: "100 Diamonds", price: 11000, icon: "💎" },
+                        { name: "310 Diamonds", price: 32000, icon: "💎" },
+                        { name: "520 Diamonds", price: 53000, icon: "💎" },
+                        { name: "1060 Diamonds", price: 105000, icon: "👑" }
+                    ]
+                },
+                {
+                    id: 3, name: "Mobile Legends", color: "#bd00ff",
+                    products: [
+                        { name: "Weekly Pass", price: 24000, icon: "🎫" },
+                        { name: "86 Diamonds", price: 12500, icon: "💎" },
+                        { name: "257 Diamonds", price: 38000, icon: "💎" },
+                        { name: "706 Diamonds", price: 95000, icon: "💎" }
+                    ]
+                },
+                {
+                    id: 4, name: "Brawl Stars", color: "#00e0ff",
+                    products: [
+                        { name: "30 Gems", price: 25000, icon: "💎" },
+                        { name: "80 Gems", price: 65000, icon: "💎" },
+                        { name: "170 Gems", price: 130000, icon: "💎" },
+                        { name: "Brawl Pass", price: 150000, icon: "🎫" }
+                    ]
+                }
             ]
         };
 
+        // UI STATE
+        let selectedProduct = null;
+
         // INIT
         if (tg.initDataUnsafe?.user) {
-            state.user.name = tg.initDataUnsafe.user.first_name;
-            state.user.id = tg.initDataUnsafe.user.id;
-            document.getElementById('username').innerText = state.user.name;
+            DB.user.name = tg.initDataUnsafe.user.first_name;
+            DB.user.id = tg.initDataUnsafe.user.id;
+        }
+        updateUI();
+        renderGames();
+
+        // RENDERERS
+        function updateUI() {
+            document.getElementById('username').innerText = DB.user.name;
+            document.getElementById('balance').innerText = DB.user.balance.toLocaleString() + " UZS";
         }
 
-        renderCatalog();
-
-        // RENDER LOGIC
-        function renderCatalog() {
+        function renderGames() {
             const grid = document.getElementById('catalog');
             grid.innerHTML = "";
-
-            state.catalog.forEach(game => {
-                const card = document.createElement('div');
-                card.className = "game-card";
-                card.onclick = () => openBuy(game);
-
-                // Generate visual placeholder if image fails (simulated)
-                card.innerHTML = `
-                <div class="game-image-wrap">
-                    <div class="tag-hot">HOT</div>
-                    <div style="width:100%; height:100%; background: ${game.color}; opacity: 0.2;"></div>
-                    <i class="ri-gamepad-fill" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:2rem; color:${game.color}"></i>
-                </div>
-                <div class="game-info">
-                    <div class="game-title">${game.name}</div>
-                    <div class="game-subtitle">Avto to'lov</div>
-                </div>
-            `;
-                grid.appendChild(card);
+            DB.games.forEach(game => {
+                const el = document.createElement('div');
+                el.className = 'game-card';
+                el.onclick = () => openProducts(game);
+                el.innerHTML = `
+                    <div class="game-image-wrap">
+                        <div class="tag-hot">HOT</div>
+                        <div style="width:100%; height:100%; background: ${game.color}; opacity: 0.15;"></div>
+                        <i class="ri-gamepad-fill" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:2.5rem; color:${game.color}"></i>
+                    </div>
+                    <div class="game-info">
+                        <div class="game-title">${game.name}</div>
+                        <div class="game-subtitle">Avto to'lov</div>
+                    </div>
+                `;
+                grid.appendChild(el);
             });
         }
 
+        // TABS
+        document.querySelectorAll('.nav-link').forEach((btn, idx) => {
+            btn.onclick = () => {
+                document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Simple Tab Logic (Mock)
+                if (idx === 0) { // Home
+                    document.getElementById('app-content').style.display = 'block';
+                    document.getElementById('placeholder-view').style.display = 'none';
+                } else {
+                    // Show Placeholder
+                    document.getElementById('app-content').style.display = 'none';
+                    showPlaceholder(["Asosiy", "Hamyon", "Tarix", "Sozlamalar"][idx]);
+                }
+
+                if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+            };
+        });
+
+        function showPlaceholder(title) {
+            const view = document.getElementById('placeholder-view') || createPlaceholderView();
+            view.style.display = 'flex';
+            view.querySelector('h2').innerText = title;
+
+            if (title === 'Tarix') {
+                // Render History if available
+                const list = view.querySelector('.content-list');
+                list.innerHTML = DB.history.length ? '' : '<p style="opacity:0.5">Hozircha bo\'sh</p>';
+                DB.history.forEach(h => {
+                    list.innerHTML += `<div style="background:#15152b; padding:15px; margin:10px 0; border-radius:12px; display:flex; justify-content:space-between;">
+                        <span>${h.item}</span>
+                        <span style="color:#00e0ff">-${h.price}</span>
+                     </div>`;
+                });
+            }
+        }
+
+        function createPlaceholderView() {
+            const div = document.createElement('div');
+            div.id = 'placeholder-view';
+            div.style.cssText = "display:none; flex-direction:column; justify-content:center; align-items:center; min-height:80vh; text-align:center; padding:20px;";
+            div.innerHTML = `
+                <i class="ri-construction-line" style="font-size:3rem; color:#5847ff; margin-bottom:20px;"></i>
+                <h2 style="margin-bottom:10px;">Title</h2>
+                <div class="content-list" style="width:100%; text-align:left;"></div>
+            `;
+            document.querySelector('#app').appendChild(div);
+            return div;
+        }
+
+        // FLOW LOGIC
+        function openProducts(game) {
+            const sheet = document.getElementById('products-sheet');
+            const grid = document.getElementById('products-grid');
+
+            document.getElementById('game-title-products').innerText = game.name;
+            grid.innerHTML = "";
+
+            game.products.forEach(prod => {
+                const item = document.createElement('div');
+                item.className = 'product-item';
+                item.onclick = () => openCheckout(prod);
+                item.innerHTML = `
+                    <div class="prod-icon">${prod.icon}</div>
+                    <div class="prod-info">
+                        <div class="prod-name">${prod.name}</div>
+                        <div class="prod-price">${prod.price.toLocaleString()} UZS</div>
+                    </div>
+                `;
+                grid.appendChild(item);
+            });
+
+            openSheet('products-sheet');
+        }
+
+        function openCheckout(product) {
+            selectedProduct = product;
+            document.getElementById('checkout-item').innerText = product.name;
+            document.getElementById('checkout-price').innerText = product.price.toLocaleString() + " UZS";
+            document.getElementById('player-id').value = "";
+
+            closeSheet('products-sheet');
+            setTimeout(() => openSheet('checkout-sheet'), 100); // Transition
+        }
+
         // ACTIONS
-        window.openDeposit = () => {
-            document.getElementById('overlay').classList.add('active');
-            document.getElementById('deposit-sheet').classList.add('active');
-            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-        };
-
-        let selectedGame = null;
-        window.openBuy = (game) => {
-            selectedGame = game;
-            document.getElementById('buy-title').innerText = game.name; // + " (" + game.type + ")";
-            document.getElementById('overlay').classList.add('active');
-            document.getElementById('buy-sheet').classList.add('active');
-            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-        };
-
-        window.closeAll = () => {
-            document.getElementById('overlay').classList.remove('active');
-            document.querySelectorAll('.sheet').forEach(s => s.classList.remove('active'));
-        };
-
         window.processDeposit = () => {
             const val = parseInt(document.getElementById('deposit-amount').value);
             if (!val) return showToast("Summani kiriting", false);
 
-            state.user.balance += val;
-            document.getElementById('balance').innerText = state.user.balance.toLocaleString();
-
+            DB.user.balance += val;
+            updateUI();
             closeAll();
             showToast("Balans to'ldirildi!", true);
             if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
@@ -619,25 +813,46 @@
             const id = document.getElementById('player-id').value;
             if (!id) return showToast("ID kiriting", false);
 
+            if (DB.user.balance < selectedProduct.price) {
+                return showToast("Balans yetarli emas!", false);
+            }
+
+            // Success
+            DB.user.balance -= selectedProduct.price;
+            DB.history.unshift({ item: selectedProduct.name, price: selectedProduct.price, date: new Date() });
+            updateUI();
+
             closeAll();
-            showToast("Sorovingiz qabul qilindi!", true);
+            showToast("Xarid muvaffaqiyatli!", true);
             if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+        };
+
+        window.openDeposit = () => openSheet('deposit-sheet');
+
+        // UTILS
+        function openSheet(id) {
+            document.getElementById('overlay').classList.add('active');
+            document.getElementById(id).classList.add('active');
+            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+        }
+
+        function closeSheet(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        window.closeAll = () => {
+            document.getElementById('overlay').classList.remove('active');
+            document.querySelectorAll('.sheet').forEach(s => s.classList.remove('active'));
         };
 
         function showToast(msg, success) {
             const el = document.getElementById('toast');
-            const icon = el.querySelector('i');
-            const text = document.getElementById('toast-msg');
-
-            text.innerText = msg;
-            icon.className = success ? "ri-checkbox-circle-fill" : "ri-error-warning-fill";
+            el.innerHTML = `<i class="${success ? 'ri-checkbox-circle-fill' : 'ri-error-warning-fill'}"></i> <span>${msg}</span>`;
             el.className = `toast show ${success ? 'success' : 'error'}`;
-
-            setTimeout(() => {
-                el.classList.remove('show');
-            }, 3000);
+            setTimeout(() => el.classList.remove('show'), 3000);
         }
     </script>
 </body>
 
 </html>
+```

@@ -13,15 +13,9 @@ load_dotenv()
 class Config:
     """Application configuration loaded from environment variables."""
     
-    # Digiflazz API Credentials
-    DIGIFLAZZ_USER: str = os.getenv("DIGIFLAZZ_USER", "")
-    DIGIFLAZZ_KEY: str = os.getenv("DIGIFLAZZ_KEY", "")
-    
-    # Digiflazz API Base URL
-    DIGIFLAZZ_BASE_URL: str = "https://api.digiflazz.com/v1"
-    
     # Telegram Bot Token
     BOT_TOKEN: str = os.getenv("BOT_TOKEN", "")
+    WEBAPP_URL: str = os.getenv("WEBAPP_URL", "https://saterlix.github.io/Digi_bot")
     
     # Pricing Configuration
     EXCHANGE_RATE: float = float(os.getenv("EXCHANGE_RATE", "0.92"))

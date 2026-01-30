@@ -69,7 +69,10 @@ async function authenticateUser() {
     try {
         const response = await fetch(`${BACKEND_URL}/api/auth/login`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                "ngrok-skip-browser-warning": "true"
+            },
             body: JSON.stringify({ initData: tg.initData })
         });
 
@@ -106,7 +109,9 @@ function renderSkeletons() {
 
 async function fetchCatalog() {
     try {
-        const response = await fetch(`${BACKEND_URL}/api/catalog`);
+        const response = await fetch(`${BACKEND_URL}/api/catalog`, {
+            headers: { "ngrok-skip-browser-warning": "true" }
+        });
         if (!response.ok) throw new Error("Network error");
 
         const json = await response.json();

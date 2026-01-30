@@ -1,5 +1,8 @@
-const tg = window.Telegram.WebApp;
-const BACKEND_URL = "http://127.0.0.1:8080";
+// Configuration
+// IMPORTANT: GitHub Pages is HTTPS. Your Backend MUST be HTTPS (e.g. valid VPS domain or Ngrok).
+// HTTP (localhost) will be blocked by the browser.
+const BACKEND_URL = "https://YOUR-NGROK-URL.ngrok-free.app"; // TODO: Replace with your actual Backend URL
+// const BACKEND_URL = "http://127.0.0.1:8080"; // Use this ONLY for local testing
 
 // Initialize Telegram WebApp
 tg.expand();

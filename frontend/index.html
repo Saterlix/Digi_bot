@@ -646,39 +646,16 @@
                     id: 2, name: "Free Fire", color: "#ffaa00",
                     products: [
                         { name: "100 Diamonds", price: 11000, icon: "💎" },
-                        { name: "310 Diamonds", price: 32000, icon: "💎" },
-                        { name: "520 Diamonds", price: 53000, icon: "💎" },
-                        { name: "1060 Diamonds", price: 105000, icon: "👑" }
                     ]
-                },
-                {
-                    id: 3, name: "Mobile Legends", color: "#bd00ff",
-                    products: [
-                        { name: "Weekly Pass", price: 24000, icon: "🎫" },
-                        { name: "86 Diamonds", price: 12500, icon: "💎" },
-                        { name: "257 Diamonds", price: 38000, icon: "💎" },
-                        { name: "706 Diamonds", price: 95000, icon: "💎" }
-                    ]
-                },
-                {
-                    id: 4, name: "Brawl Stars", color: "#00e0ff",
-                    products: [
-                        { name: "30 Gems", price: 25000, icon: "💎" },
-                        { name: "80 Gems", price: 65000, icon: "💎" },
-                        { name: "170 Gems", price: 130000, icon: "💎" },
-                        { name: "Brawl Pass", price: 150000, icon: "🎫" }
-                    ]
-                }
-            ]
-        };
+                };
 
-        // UI STATE
-        let selectedProduct = null;
+            // UI STATE
+            let selectedProduct = null;
 
-        // INIT
-        if (tg.initDataUnsafe?.user) {
-            DB.user.name = tg.initDataUnsafe.user.first_name;
-            DB.user.id = tg.initDataUnsafe.user.id;
+            // INIT
+            if(tg.initDataUnsafe?.user) {
+                DB.user.name = tg.initDataUnsafe.user.first_name;
+        DB.user.id = tg.initDataUnsafe.user.id;
         }
         updateUI();
         renderGames();
@@ -696,11 +673,16 @@
                 const el = document.createElement('div');
                 el.className = 'game-card';
                 el.onclick = () => openProducts(game);
+
+                // Use image with fallback to color
+                const bgStyle = game.image
+                    ? `background-image: url('${game.image}'); background-size: cover; background-position: center;`
+                    : `background: ${game.color};`;
+
                 el.innerHTML = `
-                    <div class="game-image-wrap">
+                    <div class="game-image-wrap" style="${bgStyle}">
                         <div class="tag-hot">HOT</div>
-                        <div style="width:100%; height:100%; background: ${game.color}; opacity: 0.15;"></div>
-                        <i class="ri-gamepad-fill" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:2.5rem; color:${game.color}"></i>
+                        <div style="position:absolute; inset:0; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);"></div>
                     </div>
                     <div class="game-info">
                         <div class="game-title">${game.name}</div>

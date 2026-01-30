@@ -38,17 +38,21 @@ async def command_start_handler(message: Message) -> None:
     user = message.from_user
     await db.create_user(str(user.id), user.username)
     
+    # Add timestamp to force cache refresh
+    import time
+    webapp_url_with_cache = f"{WEBAPP_URL}?v={int(time.time())}"
+    
     # Create Menu Button
     builder = ReplyKeyboardBuilder()
-    builder.button(text="💎 Open Store", web_app=WebAppInfo(url=WEBAPP_URL))
+    builder.button(text="🌌 Open Store (Updated)", web_app=WebAppInfo(url=webapp_url_with_cache))
     builder.add(KeyboardButton(text="ℹ️ Help"))
     builder.add(KeyboardButton(text="🔄 Reload"))
     builder.adjust(1, 2)
     
     await message.answer(
-        f"Hello, {html.bold(user.full_name)}!\n\n"
-        "Welcome to Antigravity Store.\n"
-        "Tap the button below to buy diamonds/UC.",
+        f"🌌 <b>Welcome back, {html.bold(user.full_name)}!</b>\n\n"
+        "Antigravity Store is live with the new <b>BuyPin</b> design.\n"
+        "Tap the button below to check out the new experience.",
         reply_markup=builder.as_markup(resize_keyboard=True)
     )
 
@@ -58,8 +62,7 @@ async def command_help_btn(message: Message) -> None:
         "🛠 **Bot Help**\n\n"
         "1. Tap **Open Store** to buy items.\n"
         "2. Use `/balance` to check your funds.\n"
-        "3. Use `/test_deposit <amount>` to add fake funds.\n"
-        "4. If the site doesn't load, ensure you have deployed the `frontend` folder to GitHub Pages."
+        "3. If the update is not visible, try **Reload** or clear your cache."
     )
 
 @dp.message(lambda message: message.text == "🔄 Reload")

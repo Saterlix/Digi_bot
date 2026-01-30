@@ -1,7 +1,7 @@
 // Configuration
 // IMPORTANT: GitHub Pages is HTTPS. Your Backend MUST be HTTPS (e.g. valid VPS domain or Ngrok).
 // HTTP (localhost) will be blocked by the browser.
-const BACKEND_URL = "https://YOUR-NGROK-URL.ngrok-free.app"; // TODO: Replace with your actual Backend URL
+const BACKEND_URL = "https://roundly-unmedicinal-annalise.ngrok-free.dev";
 // const BACKEND_URL = "http://127.0.0.1:8080"; // Use this ONLY for local testing
 
 // Initialize Telegram WebApp
@@ -66,7 +66,10 @@ async function authenticateUser() {
     try {
         const response = await fetch(`${BACKEND_URL}/api/auth/login`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                "ngrok-skip-browser-warning": "true"
+            },
             body: JSON.stringify({ initData: tg.initData })
         });
 
@@ -103,7 +106,9 @@ function renderSkeletons() {
 
 async function fetchCatalog() {
     try {
-        const response = await fetch(`${BACKEND_URL}/api/catalog`);
+        const response = await fetch(`${BACKEND_URL}/api/catalog`, {
+            headers: { "ngrok-skip-browser-warning": "true" }
+        });
         if (!response.ok) throw new Error("Network error");
 
         const json = await response.json();
@@ -193,7 +198,10 @@ async function handlePurchase() {
 
         const response = await fetch(`${BACKEND_URL}/api/buy`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                "ngrok-skip-browser-warning": "true"
+            },
             body: JSON.stringify(payload)
         });
 

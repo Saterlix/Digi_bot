@@ -28,7 +28,7 @@ dp = Dispatcher()
 
 # URL where the frontend is hosted (Must be HTTPS)
 # User must deploy frontend to GitHub Pages or use ngrok.
-WEBAPP_URL = getenv("WEBAPP_URL", "https://itsup3.github.io/Donate_bot")
+WEBAPP_URL = getenv("WEBAPP_URL", "https://itsup3.github.io/Digi_bot")
 
 @dp.message(CommandStart())
 async def command_start_handler(message: Message) -> None:

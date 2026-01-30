@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Antigravity Store</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Floating Header -->
+        <header class="glass-header">
+            <div class="logo">
+                <i class="ri-gamepad-fill logo-icon"></i>
+                <span>Antigravity</span>
+            </div>
+            <div class="user-balance">
+                <i class="ri-wallet-3-line"></i>
+                <span id="user-balance">0 UZS</span>
+            </div>
+        </header>
+
+        <main>
+            <!-- Hero Section -->
+            <section class="hero-section fade-in">
+                <div class="hero-card">
+                    <div class="hero-content">
+                        <span class="badge">PROMO</span>
+                        <h2>Double Diamonds<br>Weekend</h2>
+                        <p>Get 2x bonuses on all MLBB top-ups</p>
+                    </div>
+                    <div class="hero-glow"></div>
+                </div>
+            </section>
+
+            <!-- Categories -->
+            <section class="categories-section fade-in-delay-1">
+                <h3>Explore</h3>
+                <div class="chips-container" id="category-chips">
+                    <button class="chip active" onclick="filterCategory('All')">All</button>
+                    <button class="chip" onclick="filterCategory('Games')">Games</button>
+                    <button class="chip" onclick="filterCategory('Vouchers')">Vouchers</button>
+                    <button class="chip" onclick="filterCategory('Apps')">Apps</button>
+                </div>
+            </section>
+
+            <!-- Product Grid -->
+            <section class="products-section fade-in-delay-2">
+                <div id="loading-skeleton" class="grid">
+                    <!-- Skeletons injected by JS -->
+                </div>
+                <div id="catalog" class="grid hidden">
+                    <!-- Products injected by JS -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Bottom Sheet Modal for Purchase -->
+        <div id="purchase-sheet-overlay" class="overlay hidden"></div>
+        <div id="purchase-sheet" class="bottom-sheet hidden">
+            <div class="sheet-handle"></div>
+            <div class="sheet-header">
+                <div class="product-preview">
+                    <div class="product-icon-large" id="sheet-icon">
+                        <i class="ri-vip-diamond-fill"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3 id="sheet-title">Product Name</h3>
+                        <p class="brand" id="sheet-brand">Brand</p>
+                    </div>
+                </div>
+                <div class="price-tag" id="sheet-price">0 UZS</div>
+            </div>
+
+            <div class="sheet-body">
+                <div class="input-group">
+                    <label for="player-id">
+                        <i class="ri-user-star-line"></i> Player ID
+                    </label>
+                    <input type="number" id="player-id" placeholder="e.g. 12345678" pattern="\d*">
+                </div>
+
+                <div class="info-note">
+                    <i class="ri-information-line"></i>
+                    <span>Instant delivery via ID. No logic required.</span>
+                </div>
+            </div>
+
+            <div class="sheet-footer">
+                <button id="confirm-btn" class="btn-primary">
+                    <span>Purchase Now</span>
+                    <i class="ri-arrow-right-line"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Toast Notification Container -->
+        <div id="toast-container"></div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="#" class="nav-item active">
+                <i class="ri-home-5-line"></i>
+                <span>Home</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="ri-search-line"></i>
+                <span>Search</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="ri-history-line"></i>
+                <span>History</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="ri-user-3-line"></i>
+                <span>Profile</span>
+            </a>
+        </nav>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

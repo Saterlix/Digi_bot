@@ -3,131 +3,865 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Antigravity Store</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="style.css">
-
-    <!-- Fonts & Icons -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --bg-main: #0c0c1e;
+            --bg-card: #15152b;
+            --primary: #5847ff;
+            --primary-light: #7b6dff;
+            --secondary: #00e0ff;
+            --accent: #ff0055;
+            --text: #ffffff;
+            --text-muted: #8a8aa0;
+            --gold: #ffd700;
+
+            --nav-height: 80px;
+            --radius-lg: 20px;
+            --radius-md: 14px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            overflow-x: hidden;
+            padding-bottom: var(--nav-height);
+        }
+
+        #app {
+            width: 100%;
+            max-width: 480px;
+            background: var(--bg-main);
+            position: relative;
+        }
+
+        /* HEADER */
+        .header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #3d3d5c, #2a2a40);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            overflow: hidden;
+        }
+
+        .username {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .balance-badge {
+            background: linear-gradient(90deg, #5847ff, #4030c2);
+            padding: 6px 14px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 12px rgba(88, 71, 255, 0.3);
+        }
+
+        .coin-icon {
+            color: var(--gold);
+            font-size: 1.1rem;
+        }
+
+        /* ACTION BUTTONS */
+        .actions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            padding: 0 16px;
+            margin-bottom: 24px;
+        }
+
+        .action-btn {
+            background: #ffffff;
+            color: #0c0c1e;
+            border-radius: var(--radius-md);
+            padding: 14px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .action-btn:active {
+            transform: scale(0.96);
+        }
+
+        .action-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(88, 71, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.4rem;
+            color: var(--primary);
+        }
+
+        .action-text {
+            font-size: 0.75rem;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        /* BANNER */
+        .banner-container {
+            padding: 0 16px;
+            margin-bottom: 24px;
+        }
+
+        .banner {
+            background: linear-gradient(135deg, #150050 0%, #3f0099 100%);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .banner h2 {
+            font-size: 1.5rem;
+            margin-bottom: 6px;
+            z-index: 1;
+        }
+
+        .banner p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+            z-index: 1;
+        }
+
+        .banner-glow {
+            position: absolute;
+            right: -20px;
+            bottom: -40px;
+            width: 120px;
+            height: 120px;
+            background: var(--secondary);
+            filter: blur(50px);
+            opacity: 0.4;
+        }
+
+        /* TABS */
+        .tabs-container {
+            padding: 0 16px;
+            margin-bottom: 24px;
+        }
+
+        .segment-control {
+            background: var(--bg-card);
+            padding: 4px;
+            border-radius: 14px;
+            display: flex;
+        }
+
+        .segment-btn {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+
+        .segment-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* GRID */
+        .section-header {
+            padding: 0 16px;
+            margin-bottom: 16px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            padding: 0 16px 20px;
+        }
+
+        .game-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.1s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .game-card:active {
+            transform: scale(0.96);
+        }
+
+        .game-image-wrap {
+            height: 120px;
+            background: #2a2a40;
+            position: relative;
+        }
+
+        .game-image-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .game-info {
+            padding: 12px;
+            text-align: center;
+        }
+
+        .game-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .game-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .tag-hot {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--accent);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* BOTTOM NAV */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: var(--nav-height);
+            background: #121225;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-radius: 20px 20px 0 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 100;
+            padding-bottom: 10px;
+        }
+
+        .nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link.active {
+            color: var(--secondary);
+        }
+
+        .nav-link i {
+            font-size: 1.5rem;
+            margin-bottom: 2px;
+        }
+
+        /* MODALS (Sheet) */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+            backdrop-filter: blur(4px);
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .sheet {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #1a1a2e;
+            border-radius: 24px 24px 0 0;
+            padding: 24px;
+            z-index: 201;
+            transform: translateY(100%);
+            transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sheet.active {
+            transform: translateY(0);
+        }
+
+        .sheet-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .input-box {
+            background: #0c0c1e;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            width: 100%;
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            outline: none;
+        }
+
+        .input-box:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-main {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(88, 71, 255, 0.4);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: #1a1a2e;
+            border: 1px solid #555;
+            padding: 12px 20px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 300;
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast.success i {
+            color: #00e0ff;
+        }
+
+        .toast.error i {
+            color: #ff0055;
+        }
+
+        /* PRODUCTS LIST */
+        .products-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            padding-bottom: 20px;
+        }
+
+        .product-item {
+            background: #252540;
+            /* Slightly lighter than card */
+            padding: 16px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .product-item:active {
+            transform: scale(0.98);
+            background: #2f2f50;
+        }
+
+        .prod-icon {
+            font-size: 1.5rem;
+        }
+
+        .prod-info {
+            flex: 1;
+        }
+
+        .prod-name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .prod-price {
+            color: var(--secondary);
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        /* CHECKOUT */
+        .checkout-summary {
+            background: rgba(88, 71, 255, 0.1);
+            border: 1px solid var(--primary);
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .checkout-item-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .checkout-price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--gold);
+        }
+
+        .sheet-handle {
+            width: 40px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            margin: -10px auto 20px;
+        }
+    </style>
 </head>
 
 <body>
+
     <div id="app">
-        <!-- Floating Header -->
-        <header class="glass-header">
-            <div class="logo">
-                <i class="ri-gamepad-fill logo-icon"></i>
-                <span>Antigravity</span>
-            </div>
-            <div class="user-balance">
-                <i class="ri-wallet-3-line"></i>
-                <span id="user-balance">0 UZS</span>
-            </div>
-        </header>
-
-        <main>
-            <!-- Hero Section -->
-            <section class="hero-section fade-in">
-                <div class="hero-card">
-                    <div class="hero-content">
-                        <span class="badge">PROMO</span>
-                        <h2>Double Diamonds<br>Weekend</h2>
-                        <p>Get 2x bonuses on all MLBB top-ups</p>
+        <div id="app-content">
+            <!-- HEADER -->
+            <header class="header">
+                <div class="user-info">
+                    <div class="avatar" id="avatar">
+                        <i class="ri-user-smile-line"></i>
+                        <img id="avatar-img" src="" style="display:none; width:100%; height:100%;">
                     </div>
-                    <div class="hero-glow"></div>
+                    <div class="username" id="username">Guest</div>
                 </div>
-            </section>
+                <div class="balance-badge">
+                    <i class="ri-copper-coin-fill coin-icon"></i>
+                    <span id="balance">0</span>
+                </div>
+            </header>
 
-            <!-- Categories -->
-            <section class="categories-section fade-in-delay-1">
-                <h3>Explore</h3>
-                <div class="chips-container" id="category-chips">
-                    <button class="chip active" onclick="filterCategory('All')">All</button>
-                    <button class="chip" onclick="filterCategory('Games')">Games</button>
-                    <button class="chip" onclick="filterCategory('Vouchers')">Vouchers</button>
-                    <button class="chip" onclick="filterCategory('Apps')">Apps</button>
+            <!-- ACTION BUTTONS -->
+            <div class="actions-grid">
+                <div class="action-btn" onclick="openDeposit()">
+                    <div class="action-icon"><i class="ri-wallet-3-fill"></i></div>
+                    <div class="action-text">Hisobni<br>to'ldirish</div>
                 </div>
-            </section>
-
-            <!-- Product Grid -->
-            <section class="products-section fade-in-delay-2">
-                <div id="loading-skeleton" class="grid">
-                    <!-- Skeletons injected by JS -->
+                <div class="action-btn">
+                    <div class="action-icon" style="background: rgba(0, 224, 255, 0.1); color: var(--secondary);"><i
+                            class="ri-gift-2-fill"></i></div>
+                    <div class="action-text">Bonus<br>kodlar</div>
                 </div>
-                <div id="catalog" class="grid hidden">
-                    <!-- Products injected by JS -->
-                </div>
-            </section>
-        </main>
-
-        <!-- Bottom Sheet Modal for Purchase -->
-        <div id="purchase-sheet-overlay" class="overlay hidden"></div>
-        <div id="purchase-sheet" class="bottom-sheet hidden">
-            <div class="sheet-handle"></div>
-            <div class="sheet-header">
-                <div class="product-preview">
-                    <div class="product-icon-large" id="sheet-icon">
-                        <i class="ri-vip-diamond-fill"></i>
-                    </div>
-                    <div class="product-info">
-                        <h3 id="sheet-title">Product Name</h3>
-                        <p class="brand" id="sheet-brand">Brand</p>
-                    </div>
-                </div>
-                <div class="price-tag" id="sheet-price">0 UZS</div>
-            </div>
-
-            <div class="sheet-body">
-                <div class="input-group">
-                    <label for="player-id">
-                        <i class="ri-user-star-line"></i> Player ID
-                    </label>
-                    <input type="number" id="player-id" placeholder="e.g. 12345678" pattern="\d*">
-                </div>
-
-                <div class="info-note">
-                    <i class="ri-information-line"></i>
-                    <span>Instant delivery via ID. No logic required.</span>
+                <div class="action-btn">
+                    <div class="action-icon" style="background: rgba(255, 0, 85, 0.1); color: var(--accent);"><i
+                            class="ri-history-fill"></i></div>
+                    <div class="action-text">To'lov<br>tarixi</div>
                 </div>
             </div>
 
-            <div class="sheet-footer">
-                <button id="confirm-btn" class="btn-primary">
-                    <span>Purchase Now</span>
-                    <i class="ri-arrow-right-line"></i>
-                </button>
+            <!-- BANNER -->
+            <div class="banner-container">
+                <div class="banner">
+                    <h2>Double Promo</h2>
+                    <p>Get 2x UC on first deposit!</p>
+                    <div class="banner-glow"></div>
+                </div>
+            </div>
+
+            <!-- TABS -->
+            <div class="tabs-container">
+                <div class="segment-control">
+                    <div class="segment-btn active">ID</div>
+                    <div class="segment-btn">Promo kod</div>
+                    <div class="segment-btn">Avto (24/7)</div>
+                </div>
+            </div>
+
+            <!-- GAMES -->
+            <h3 class="section-header">Mashhur e'lonlar</h3>
+            <div class="games-grid" id="catalog">
+                <!-- Rendered via JS -->
             </div>
         </div>
-
-        <!-- Toast Notification Container -->
-        <div id="toast-container"></div>
-
-        <!-- Bottom Navigation -->
-        <nav class="bottom-nav">
-            <a href="#" class="nav-item active">
-                <i class="ri-home-5-line"></i>
-                <span>Home</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i class="ri-search-line"></i>
-                <span>Search</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i class="ri-history-line"></i>
-                <span>History</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i class="ri-user-3-line"></i>
-                <span>Profile</span>
-            </a>
-        </nav>
     </div>
 
-    <script src="app.js"></script>
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+        <div class="nav-link active">
+            <i class="ri-home-4-fill"></i>
+            <span>Asosiy</span>
+        </div>
+        <div class="nav-link">
+            <i class="ri-wallet-fill"></i>
+            <span>Hamyon</span>
+        </div>
+        <div class="nav-link">
+            <i class="ri-time-fill"></i>
+            <span>Tarix</span>
+        </div>
+        <div class="nav-link">
+            <i class="ri-settings-4-fill"></i>
+            <span>Sozlamalar</span>
+        </div>
+    </nav>
+
+    <!-- MODALS -->
+    <div class="overlay" id="overlay" onclick="closeAll()"></div>
+
+    <!-- Deposit Sheet -->
+    <div class="sheet" id="deposit-sheet">
+        <div class="sheet-title">Hisobni to'ldirish</div>
+        <input type="number" id="deposit-amount" class="input-box" placeholder="Summani kiriting (UZS)"
+            inputmode="numeric">
+        <button class="btn-main" onclick="processDeposit()">To'lash</button>
+    </div>
+
+    <!-- Product Selection Sheet (Catalog) -->
+    <div class="sheet" id="products-sheet" style="height: 70vh;">
+        <div class="sheet-handle"></div>
+        <div class="sheet-title" id="game-title-products">Kategoriyalar</div>
+        <div class="products-grid" id="products-grid">
+            <!-- Products rendered here -->
+        </div>
+    </div>
+
+    <!-- Checkout Sheet -->
+    <div class="sheet" id="checkout-sheet">
+        <div class="sheet-title">Xarid qilish</div>
+        <div class="checkout-summary">
+            <div class="checkout-item-name" id="checkout-item">Unknown Item</div>
+            <div class="checkout-price" id="checkout-price">0 UZS</div>
+        </div>
+        <input type="text" id="player-id" class="input-box" placeholder="Player ID kiriting">
+        <button class="btn-main" onclick="processBuy()">Sotib olish</button>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast">
+        <i class="ri-checkbox-circle-fill"></i>
+        <span id="toast-msg">Success</span>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.enableClosingConfirmation();
+
+        // MOCK DATA
+        const DB = {
+            user: { id: 123456, name: "Guest", balance: 0 },
+            history: [],
+            games: [
+                {
+                    id: 1, name: "PUBG Mobile", color: "#fca311",
+                    image: "https://i.pinimg.com/736x/55/9b/64/559b640cb93444453303c7344d18398b.jpg",
+                    products: [
+                        { name: "60 UC", price: 11500, icon: "💎" },
+                        { name: "325 UC", price: 58000, icon: "💎" },
+                        { name: "660 UC", price: 115000, icon: "💰" },
+                        { name: "1800 UC", price: 280000, icon: "📦" }
+                    ]
+                },
+                {
+                    id: 2, name: "Free Fire", color: "#ffaa00",
+                    image: "https://i.pinimg.com/736x/3e/1a/87/3e1a8720aa9d22ab3d9d1c7cf42e58a7.jpg",
+                    products: [
+                        { name: "100 Diamonds", price: 11000, icon: "💎" },
+                        { name: "310 Diamonds", price: 32000, icon: "💎" },
+                        { name: "520 Diamonds", price: 53000, icon: "💎" },
+                        { name: "1060 Diamonds", price: 105000, icon: "👑" }
+                    ]
+                },
+                {
+                    id: 3, name: "Mobile Legends", color: "#bd00ff",
+                    image: "https://i.pinimg.com/736x/39/12/a9/3912a9e08ed02a8a7ed1963f6a8a9c7c.jpg",
+                    products: [
+                        { name: "Weekly Pass", price: 24000, icon: "🎫" },
+                        { name: "86 Diamonds", price: 12500, icon: "💎" },
+                        { name: "257 Diamonds", price: 38000, icon: "💎" },
+                        { name: "706 Diamonds", price: 95000, icon: "💎" }
+                    ]
+                },
+                {
+                    id: 4, name: "Brawl Stars", color: "#00e0ff",
+                    image: "https://i.pinimg.com/736x/d8/c7/26/d8c726a32bf8f0f8ee54e8d0a7da0d5b.jpg",
+                    products: [
+                        { name: "30 Gems", price: 25000, icon: "💎" },
+                        { name: "80 Gems", price: 65000, icon: "💎" },
+                        { name: "170 Gems", price: 130000, icon: "💎" },
+                        { name: "Brawl Pass", price: 150000, icon: "🎫" }
+                    ]
+                }
+            ]
+        };
+
+        // UI STATE
+        let selectedProduct = null;
+
+        // INIT
+        if (tg.initDataUnsafe?.user) {
+            DB.user.name = tg.initDataUnsafe.user.first_name;
+            DB.user.id = tg.initDataUnsafe.user.id;
+        }
+        updateUI();
+        renderGames();
+
+        // RENDERERS
+        function updateUI() {
+            document.getElementById('username').innerText = DB.user.name;
+            document.getElementById('balance').innerText = DB.user.balance.toLocaleString() + " UZS";
+        }
+
+        function renderGames() {
+            const grid = document.getElementById('catalog');
+            grid.innerHTML = "";
+            DB.games.forEach(game => {
+                const el = document.createElement('div');
+                el.className = 'game-card';
+                el.onclick = () => openProducts(game);
+
+                // Use image with fallback to color
+                const bgStyle = game.image
+                    ? `background-image: url('${game.image}'); background-size: cover; background-position: center;`
+                    : `background: ${game.color};`;
+
+                el.innerHTML = `
+                    <div class="game-image-wrap" style="${bgStyle}">
+                        <div class="tag-hot">HOT</div>
+                        <div style="position:absolute; inset:0; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);"></div>
+                    </div>
+                    <div class="game-info">
+                        <div class="game-title">${game.name}</div>
+                        <div class="game-subtitle">Avto to'lov</div>
+                    </div>
+                `;
+                grid.appendChild(el);
+            });
+        }
+
+        // TABS
+        document.querySelectorAll('.nav-link').forEach((btn, idx) => {
+            btn.onclick = () => {
+                document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Simple Tab Logic (Mock)
+                if (idx === 0) { // Home
+                    document.getElementById('app-content').style.display = 'block';
+                    document.getElementById('placeholder-view').style.display = 'none';
+                } else {
+                    // Show Placeholder
+                    document.getElementById('app-content').style.display = 'none';
+                    showPlaceholder(["Asosiy", "Hamyon", "Tarix", "Sozlamalar"][idx]);
+                }
+
+                if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+            };
+        });
+
+        function showPlaceholder(title) {
+            const view = document.getElementById('placeholder-view') || createPlaceholderView();
+            view.style.display = 'flex';
+            view.querySelector('h2').innerText = title;
+
+            if (title === 'Tarix') {
+                // Render History if available
+                const list = view.querySelector('.content-list');
+                list.innerHTML = DB.history.length ? '' : '<p style="opacity:0.5">Hozircha bo\'sh</p>';
+                DB.history.forEach(h => {
+                    list.innerHTML += `<div style="background:#15152b; padding:15px; margin:10px 0; border-radius:12px; display:flex; justify-content:space-between;">
+                        <span>${h.item}</span>
+                        <span style="color:#00e0ff">-${h.price}</span>
+                     </div>`;
+                });
+            }
+        }
+
+        function createPlaceholderView() {
+            const div = document.createElement('div');
+            div.id = 'placeholder-view';
+            div.style.cssText = "display:none; flex-direction:column; justify-content:center; align-items:center; min-height:80vh; text-align:center; padding:20px;";
+            div.innerHTML = `
+                <i class="ri-construction-line" style="font-size:3rem; color:#5847ff; margin-bottom:20px;"></i>
+                <h2 style="margin-bottom:10px;">Title</h2>
+                <div class="content-list" style="width:100%; text-align:left;"></div>
+            `;
+            document.querySelector('#app').appendChild(div);
+            return div;
+        }
+
+        // FLOW LOGIC
+        function openProducts(game) {
+            const sheet = document.getElementById('products-sheet');
+            const grid = document.getElementById('products-grid');
+
+            document.getElementById('game-title-products').innerText = game.name;
+            grid.innerHTML = "";
+
+            game.products.forEach(prod => {
+                const item = document.createElement('div');
+                item.className = 'product-item';
+                item.onclick = () => openCheckout(prod);
+                item.innerHTML = `
+                    <div class="prod-icon">${prod.icon}</div>
+                    <div class="prod-info">
+                        <div class="prod-name">${prod.name}</div>
+                        <div class="prod-price">${prod.price.toLocaleString()} UZS</div>
+                    </div>
+                `;
+                grid.appendChild(item);
+            });
+
+            openSheet('products-sheet');
+        }
+
+        function openCheckout(product) {
+            selectedProduct = product;
+            document.getElementById('checkout-item').innerText = product.name;
+            document.getElementById('checkout-price').innerText = product.price.toLocaleString() + " UZS";
+            document.getElementById('player-id').value = "";
+
+            closeSheet('products-sheet');
+            setTimeout(() => openSheet('checkout-sheet'), 100); // Transition
+        }
+
+        // ACTIONS
+        window.processDeposit = () => {
+            const val = parseInt(document.getElementById('deposit-amount').value);
+            if (!val) return showToast("Summani kiriting", false);
+
+            DB.user.balance += val;
+            updateUI();
+            closeAll();
+            showToast("Balans to'ldirildi!", true);
+            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+        };
+
+        window.processBuy = () => {
+            const id = document.getElementById('player-id').value;
+            if (!id) return showToast("ID kiriting", false);
+
+            if (DB.user.balance < selectedProduct.price) {
+                return showToast("Balans yetarli emas!", false);
+            }
+
+            // Success
+            DB.user.balance -= selectedProduct.price;
+            DB.history.unshift({ item: selectedProduct.name, price: selectedProduct.price, date: new Date() });
+            updateUI();
+
+            closeAll();
+            showToast("Xarid muvaffaqiyatli!", true);
+            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+        };
+
+        window.openDeposit = () => openSheet('deposit-sheet');
+
+        // UTILS
+        function openSheet(id) {
+            document.getElementById('overlay').classList.add('active');
+            document.getElementById(id).classList.add('active');
+            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+        }
+
+        function closeSheet(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        window.closeAll = () => {
+            document.getElementById('overlay').classList.remove('active');
+            document.querySelectorAll('.sheet').forEach(s => s.classList.remove('active'));
+        };
+
+        function showToast(msg, success) {
+            const el = document.getElementById('toast');
+            el.innerHTML = `<i class="${success ? 'ri-checkbox-circle-fill' : 'ri-error-warning-fill'}"></i> <span>${msg}</span>`;
+            el.className = `toast show ${success ? 'success' : 'error'}`;
+            setTimeout(() => el.classList.remove('show'), 3000);
+        }
+    </script>
 </body>
 
 </html>
+```

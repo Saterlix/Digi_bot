@@ -478,7 +478,67 @@
                     inputmode="numeric">
             </div>
 
-            <button class="sheet-btn" onclick="confirmPurchase()">Tasdiqlash</button>
+            <button class="sheet-btn" onclick="openPaymentMethods()">Tasdiqlash</button>
+        </div>
+    </div>
+
+    <!-- 8. PAYMENT METHODS MODAL (BOTTOM SHEET) -->
+    <div class="bottom-sheet-overlay" id="paymentMethodsSheet" onclick="closeSheetOnBackground(event)">
+        <div class="bottom-sheet">
+            <div class="sheet-handle"></div>
+            <h3 class="sheet-header-title">To'lov usulini tanlang</h3>
+
+            <div class="payment-methods-grid"
+                style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+                <div class="payment-method-card" onclick="openPaymentDetails('Uzcard')"
+                    style="background: var(--bg-main); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; text-align: center; cursor: pointer;">
+                    <span style="font-size: 24px; display: block; margin-bottom: 8px;">💳</span>
+                    <span style="font-weight: 700; font-size: 14px;">Uzcard</span>
+                </div>
+                <div class="payment-method-card" onclick="openPaymentDetails('HUMO')"
+                    style="background: var(--bg-main); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; text-align: center; cursor: pointer;">
+                    <span style="font-size: 24px; display: block; margin-bottom: 8px;">💳</span>
+                    <span style="font-weight: 700; font-size: 14px;">HUMO</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. PAYMENT DETAILS MODAL (BOTTOM SHEET) -->
+    <div class="bottom-sheet-overlay" id="paymentDetailsSheet" onclick="closeSheetOnBackground(event)">
+        <div class="bottom-sheet">
+            <div class="sheet-handle"></div>
+            <h3 class="sheet-header-title">To'lov ma'lumotlari</h3>
+
+            <div
+                style="background: var(--bg-main); padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
+                <p style="color: var(--text-muted); font-size: 13px; margin: 0 0 4px 0;">Karta raqami (<span
+                        id="selectedPaymentMethod">Uzcard</span>)</p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2 style="margin: 0; font-size: 18px; letter-spacing: 1px; color: var(--price-color);"
+                        id="merchantCardInfo">8600 1234 5678 9012</h2>
+                    <button onclick="copyToClipboard('merchantCardInfo')"
+                        style="background: transparent; border: none; color: var(--accent); cursor: pointer; font-size: 16px;">📋
+                        Nuxsa</button>
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.05); margin: 16px 0;">
+
+                <p style="color: var(--text-muted); font-size: 13px; margin: 0 0 4px 0;">O'tkazma summasi</p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2 style="margin: 0; font-size: 20px; font-weight: 800;" id="exactAmountToTransfer">0 UZS</h2>
+                    <button onclick="copyToClipboard('exactAmountToTransfer')"
+                        style="background: transparent; border: none; color: var(--accent); cursor: pointer; font-size: 16px;">📋
+                        Nuxsa</button>
+                </div>
+                <p style="color: #ff4757; font-size: 12px; margin: 8px 0 0 0;">⚠️ Diqqat: Summani tiyinlarigacha aniq
+                    o'tkazing, aks holda tushmaydi!</p>
+            </div>
+
+            <button class="sheet-btn" onclick="checkPaymentStatus()">To'lovni qildim ✅</button>
+            <button class="sheet-btn" onclick="closeAllSheets()"
+                style="background: transparent; box-shadow: none; border: 1px solid rgba(255,255,255,0.1); margin-top: 12px; color: var(--text-muted);">Bekor
+                qilish</button>
         </div>
     </div>
 
@@ -621,34 +681,91 @@
 
         function closeBottomSheet() {
             document.getElementById('bottomSheet').classList.remove('active');
+            // Do not clear ID yet, user might come back back
+        }
+
+        function closeAllSheets() {
+            document.querySelectorAll('.bottom-sheet-overlay').forEach(el => el.classList.remove('active'));
             currentProductId = null;
+            pendingPaymentAmount = 0;
         }
 
         function closeSheetOnBackground(e) {
-            if (e.target.id === 'bottomSheet') {
-                closeBottomSheet();
+            if (e.target.classList.contains('bottom-sheet-overlay')) {
+                e.target.classList.remove('active');
             }
         }
 
-        function confirmPurchase() {
-            const playerId = document.getElementById('playerIdInput').value.trim();
+        let pendingPaymentAmount = 0;
 
+        function openPaymentMethods() {
+            const playerId = document.getElementById('playerIdInput').value.trim();
             if (!playerId) {
                 if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
                 tg.showAlert("Iltimos, User ID kiriting!");
                 return;
             }
 
+            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+
+            // Switch from Bottom Sheet to Payment Methods
+            document.getElementById('bottomSheet').classList.remove('active');
+            document.getElementById('paymentMethodsSheet').classList.add('active');
+        }
+
+        function openPaymentDetails(method) {
+            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+
+            document.getElementById('paymentMethodsSheet').classList.remove('active');
+            document.getElementById('selectedPaymentMethod').textContent = method;
+
+            // Generate exact P2P amount based on price + random cents
+            const basePrice = parseInt(document.getElementById('sheetPrice').textContent.replace(/\D/g, ''));
+            const randomAdd = Math.floor(Math.random() * 99) + 1;
+            pendingPaymentAmount = basePrice + randomAdd;
+
+            const priceFormatted = new Intl.NumberFormat('ru-RU').format(pendingPaymentAmount);
+            document.getElementById('exactAmountToTransfer').textContent = `${priceFormatted} UZS`;
+            document.getElementById('exactAmountToTransfer').dataset.raw = pendingPaymentAmount;
+
+            // Mock card numbers based on Method
+            if (method === 'HUMO') {
+                document.getElementById('merchantCardInfo').textContent = "9860 1234 5678 9012";
+            } else {
+                document.getElementById('merchantCardInfo').textContent = "8600 1234 5678 9012";
+            }
+
+            document.getElementById('paymentDetailsSheet').classList.add('active');
+        }
+
+        function copyToClipboard(elementId) {
+            if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+            const el = document.getElementById(elementId);
+            const textToCopy = el.dataset.raw ? el.dataset.raw : el.textContent.replace(/\s+/g, '');
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                tg.showAlert("Nusxa olindi: " + textToCopy);
+            }).catch(err => {
+                console.error('Copy failure', err);
+            });
+        }
+
+        function checkPaymentStatus() {
             if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
 
+            const playerId = document.getElementById('playerIdInput').value.trim();
             const data = JSON.stringify({
                 action: 'buy',
                 product_id: currentProductId,
-                player_id: playerId
+                player_id: playerId,
+                paid_amount: pendingPaymentAmount
             });
 
+            // Send to Telegram Bot letting it know user claims they paid
             tg.sendData(data);
-            closeBottomSheet();
+
+            tg.showAlert("To'lov qabul qilindi! Iltimos botdagi xabarni kuting.");
+            closeAllSheets();
         }
     </script>
 </body>

@@ -1,43 +1,44 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uz">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Магазин Доната</title>
+    <title>Donate Shop</title>
 
     <!-- Telegram Web App API -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
     <style>
-        /* CSS Variables mapping to Telegram Native Theme */
+        /* 
+         Buypin Clone Theme - Premium Dark
+         We are hardcoding the dark theme as gamestop relies on dark UX
+        */
         :root {
-            --bg-color: var(--tg-theme-bg-color, #ffffff);
-            --text-color: var(--tg-theme-text-color, #000000);
-            --hint-color: var(--tg-theme-hint-color, #999999);
-            --link-color: var(--tg-theme-link-color, #2481cc);
-            --button-color: var(--tg-theme-button-color, #2481cc);
-            --button-text-color: var(--tg-theme-button-text-color, #ffffff);
-            --secondary-bg-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
+            --bg-main: #0b0f19;
+            --bg-card: #1c1f2e;
+            --bg-nav: #161824;
+            --accent: #5e5ce6;
+            --accent-glow: rgba(94, 92, 230, 0.4);
+            --text-main: #ffffff;
+            --text-muted: #8e93a6;
+            --price-color: #00d2ff;
+            /* Cyan pop */
 
             --border-radius: 16px;
-            --font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-
-            --accent-glow: rgba(36, 129, 204, 0.2);
-            --card-bg: rgba(var(--tg-theme-bg-color-rgb, 255, 255, 255), 0.7);
-            --glass-border: 1px solid rgba(150, 150, 150, 0.1);
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
-        /* Basic Reset & Body */
         * {
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             margin: 0;
             padding: 0;
-            background-color: var(--secondary-bg-color);
-            color: var(--text-color);
+            background-color: var(--bg-main);
+            color: var(--text-main);
             font-family: var(--font-family);
             -webkit-font-smoothing: antialiased;
             padding-bottom: 90px;
@@ -45,19 +46,16 @@
             overflow-x: hidden;
         }
 
-        /* 1. HEADER */
+        /* 1. HEADER (Buypin Exact Match) */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px 20px;
-            background: var(--bg-color);
+            padding: 16px 20px 10px;
+            background: var(--bg-main);
             position: sticky;
             top: 0;
             z-index: 50;
-            border-bottom: var(--glass-border);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
         }
 
         .header-left {
@@ -67,48 +65,35 @@
         }
 
         .avatar {
-            width: 42px;
-            height: 42px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--button-color), #4facfe);
+            background: #2a2d3e;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: var(--text-main);
             font-weight: bold;
             font-size: 16px;
             object-fit: cover;
-            box-shadow: 0 4px 10px var(--accent-glow);
-        }
-
-        .greeting {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .greeting-text {
-            font-size: 12px;
-            color: var(--hint-color);
-            margin: 0;
         }
 
         .user-name {
             font-size: 16px;
             font-weight: 700;
             margin: 0;
-            letter-spacing: -0.3px;
         }
 
         .header-right {
             display: flex;
             align-items: center;
-            background: var(--secondary-bg-color);
+            background: var(--accent);
             padding: 6px 14px;
             border-radius: 20px;
             gap: 6px;
             cursor: pointer;
+            box-shadow: 0 4px 15px var(--accent-glow);
             transition: transform 0.2s;
-            border: var(--glass-border);
         }
 
         .header-right:active {
@@ -116,28 +101,30 @@
         }
 
         .coin-icon {
-            font-size: 18px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffd700;
         }
 
         .balance-value {
             font-weight: 800;
-            font-size: 15px;
-            color: var(--text-color);
+            font-size: 14px;
+            color: #fff;
         }
 
-        /* 2. MAIN TITLE */
+        /* 2. TITLE */
         .page-title {
-            padding: 24px 20px 16px;
+            padding: 10px 20px 16px;
             margin: 0;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 800;
-            letter-spacing: -0.5px;
+            letter-spacing: -0.3px;
         }
 
         /* 3. CATEGORIES (Pills) */
         .categories-scroll {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             padding: 0 20px 20px;
             overflow-x: auto;
             scrollbar-width: none;
@@ -149,103 +136,88 @@
         }
 
         .category-chip {
-            padding: 10px 20px;
-            border-radius: 24px;
-            background: var(--bg-color);
-            color: var(--text-color);
+            padding: 8px 18px;
+            border-radius: 20px;
+            background: var(--bg-card);
+            color: var(--text-muted);
             font-weight: 600;
             font-size: 14px;
             white-space: nowrap;
             cursor: pointer;
-            border: var(--glass-border);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.2s;
         }
 
         .category-chip.active {
-            background: var(--button-color);
-            color: var(--button-text-color);
-            box-shadow: 0 4px 12px var(--accent-glow);
+            background: var(--accent);
+            color: #ffffff;
             border-color: transparent;
+            box-shadow: 0 4px 12px var(--accent-glow);
         }
 
-        /* 4. PRODUCT GRID */
+        /* 4. PRODUCT GRID (2 Columns) */
         .grid-container {
             padding: 0 20px;
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 14px;
+            gap: 12px;
         }
 
-        /* 5. PRODUCT CARDS (Premium) */
+        /* 5. PRODUCT CARDS (Horizontal Layout inside) */
         .product-card {
-            background: var(--bg-color);
-            border-radius: var(--border-radius);
-            padding: 16px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 14px;
             position: relative;
             display: flex;
-            flex-direction: column;
-            border: var(--glass-border);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
-            transition: transform 0.2s, box-shadow 0.2s;
+            align-items: center;
+            /* Vertical center */
+            justify-content: space-between;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: transform 0.1s, box-shadow 0.1s;
             cursor: pointer;
             overflow: hidden;
+            min-height: 85px;
         }
 
         .product-card:active {
             transform: scale(0.96);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-        }
-
-        /* Optional glassmorphism overlay */
-        .product-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
-            border-radius: var(--border-radius);
-            pointer-events: none;
-        }
-
-        .card-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: linear-gradient(135deg, #FF3B30, #FF6B00);
-            color: white;
-            font-size: 10px;
-            font-weight: 800;
-            padding: 4px 8px;
-            border-radius: 8px;
-            text-transform: uppercase;
-            box-shadow: 0 2px 6px rgba(255, 59, 48, 0.3);
+            background: #232738;
         }
 
         .card-icon {
-            font-size: 38px;
-            margin-bottom: 12px;
-            align-self: flex-start;
-            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+            font-size: 32px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+            flex-shrink: 0;
+        }
+
+        .card-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            /* Right align text like Buypin */
+            flex-grow: 1;
+            margin-left: 10px;
         }
 
         .card-title {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
-            margin: 0 0 6px 0;
-            color: var(--text-color);
-            line-height: 1.2;
+            margin: 0 0 4px 0;
+            color: var(--text-main);
+            text-align: right;
         }
 
         .card-price {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 800;
-            color: var(--button-color);
-            /* Cyan/Gold accent via theme */
+            color: var(--price-color);
             margin: 0;
-            margin-top: auto;
+            background: rgba(0, 210, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 6px;
+            text-align: right;
         }
 
         /* Loading State */
@@ -253,35 +225,32 @@
             grid-column: 1 / -1;
             text-align: center;
             padding: 40px;
-            color: var(--hint-color);
+            color: var(--text-muted);
             font-size: 15px;
             font-weight: 500;
         }
 
-        /* 6. BOTTOM NAVIGATION BAR */
+        /* 6. BOTTOM NAVIGATION BAR (Asosiy, Hamyon, Tarix, Sozlamalar) */
         .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            background: var(--bg-color);
+            background: var(--bg-nav);
             display: flex;
             justify-content: space-around;
-            padding: 12px 0 20px;
-            /* Extra padding for iOS home indicator */
-            border-top: var(--glass-border);
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.04);
+            padding: 12px 0 16px;
+            /* Padding for iOS */
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
             z-index: 100;
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
         }
 
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
-            color: var(--hint-color);
+            gap: 4px;
+            color: var(--text-muted);
             font-size: 11px;
             font-weight: 600;
             cursor: pointer;
@@ -290,16 +259,12 @@
         }
 
         .nav-item.active {
-            color: var(--button-color);
+            color: var(--price-color);
+            /* Bright indicator for active */
         }
 
         .nav-icon {
-            font-size: 22px;
-            transition: transform 0.2s;
-        }
-
-        .nav-item:active .nav-icon {
-            transform: scale(0.9);
+            font-size: 20px;
         }
 
         /* 7. PURCHASE MODAL (BOTTOM SHEET) */
@@ -309,9 +274,9 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(3px);
-            -webkit-backdrop-filter: blur(3px);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
             display: flex;
             align-items: flex-end;
             z-index: 1000;
@@ -326,13 +291,14 @@
         }
 
         .bottom-sheet {
-            background: var(--bg-color);
+            background: var(--bg-card);
             width: 100%;
-            border-radius: 24px 24px 0 0;
-            padding: 30px 24px;
+            border-radius: 20px 20px 0 0;
+            padding: 24px;
             transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .bottom-sheet-overlay.active .bottom-sheet {
@@ -340,25 +306,55 @@
         }
 
         .sheet-handle {
-            width: 40px;
+            width: 36px;
             height: 4px;
-            background: var(--hint-color);
+            background: #3e4256;
             border-radius: 2px;
-            margin: -15px auto 20px;
-            opacity: 0.5;
+            margin: -10px auto 20px;
         }
 
-        .sheet-title {
-            font-size: 22px;
+        .sheet-header-title {
+            text-align: center;
+            font-size: 18px;
             font-weight: 800;
-            margin: 0 0 8px 0;
-            letter-spacing: -0.5px;
+            margin: 0 0 20px 0;
+            color: var(--text-main);
         }
 
-        .sheet-desc {
+        /* Selected product info inside modal */
+        .selected-product-box {
+            background: var(--bg-main);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .sp-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sp-icon {
+            font-size: 24px;
+        }
+
+        .sp-title {
+            font-weight: 700;
             font-size: 15px;
-            color: var(--hint-color);
-            margin: 0 0 24px 0;
+            margin: 0;
+        }
+
+        .sp-price {
+            color: var(--price-color);
+            font-weight: 800;
+            font-size: 14px;
+            margin: 0;
+            text-align: right;
         }
 
         .input-group {
@@ -368,50 +364,45 @@
         .input-label {
             display: block;
             font-size: 13px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--hint-color);
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-muted);
         }
 
         .premium-input {
             width: 100%;
-            padding: 16px;
-            background: var(--secondary-bg-color);
-            border: 2px solid transparent;
-            border-radius: 14px;
+            padding: 14px 16px;
+            background: var(--bg-main);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
             font-size: 16px;
-            color: var(--text-color);
-            font-family: inherit;
+            color: var(--text-main);
             outline: none;
-            transition: all 0.3s;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+            transition: all 0.2s;
         }
 
         .premium-input:focus {
-            border-color: var(--button-color);
-            background: var(--bg-color);
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0), 0 0 0 4px var(--accent-glow);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px var(--accent-glow);
         }
 
         .sheet-btn {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(135deg, var(--button-color), #4facfe);
+            background: var(--accent);
             color: white;
             border: none;
-            border-radius: 14px;
+            border-radius: 12px;
             font-size: 16px;
-            font-weight: 700;
+            font-weight: 800;
             cursor: pointer;
-            box-shadow: 0 6px 15px var(--accent-glow);
-            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px var(--accent-glow);
+            transition: transform 0.1s;
         }
 
         .sheet-btn:active {
             transform: scale(0.97);
-            box-shadow: 0 2px 8px var(--accent-glow);
+            background: #4a48d4;
         }
     </style>
 </head>
@@ -423,10 +414,7 @@
         <div class="header-left">
             <img id="userAvatarWrap" class="avatar" src="" style="display:none;">
             <div id="defaultAvatar" class="avatar">U</div>
-            <div class="greeting">
-                <p class="greeting-text">Welcome back,</p>
-                <h2 class="user-name" id="userName">Guest</h2>
-            </div>
+            <h2 class="user-name" id="userName">undefined</h2>
         </div>
         <div class="header-right" onclick="sendTopupAction()">
             <span class="coin-icon">💰</span>
@@ -435,39 +423,38 @@
     </header>
 
     <!-- 2. TITLE -->
-    <h1 class="page-title">Выберите товар</h1>
+    <h1 class="page-title">Miqdorni tanlang</h1>
 
     <!-- 3. CATEGORIES -->
     <div class="categories-scroll" id="categoriesWrapper">
-        <div class="category-chip active" onclick="filterCategory('All', this)">🔥 All</div>
-        <div class="category-chip" onclick="filterCategory('Mobile Legends', this)">Mobile Legends</div>
-        <div class="category-chip" onclick="filterCategory('PUBG Mobile', this)">PUBG Mobile</div>
-        <div class="category-chip" onclick="filterCategory('Free Fire', this)">Free Fire</div>
-        <div class="category-chip" onclick="filterCategory('Roblox', this)">Roblox</div>
+        <div class="category-chip active" onclick="filterCategory('All', this)">All</div>
+        <div class="category-chip" onclick="filterCategory('PUBG Mobile', this)">UC 🏷️</div>
+        <div class="category-chip" onclick="filterCategory('Mobile Legends', this)">Diamonds 💎</div>
+        <div class="category-chip" onclick="filterCategory('Roblox', this)">Robux 🎮</div>
     </div>
 
     <!-- 4 & 5. PRODUCT GRID & CARDS -->
     <main class="grid-container" id="productsGrid">
-        <div class="loading-state">Загрузка каталога...</div>
+        <div class="loading-state">Yuklanmoqda...</div>
     </main>
 
     <!-- 6. BOTTOM NAVIGATION -->
     <nav class="bottom-nav">
         <div class="nav-item active">
             <span class="nav-icon">🏠</span>
-            <span>Home</span>
+            <span>Asosiy</span>
         </div>
         <div class="nav-item" onclick="sendTopupAction()">
             <span class="nav-icon">👛</span>
-            <span>Wallet</span>
+            <span>Hamyon</span>
         </div>
         <div class="nav-item">
-            <span class="nav-icon">📜</span>
-            <span>History</span>
+            <span class="nav-icon">🕒</span>
+            <span>Tarix</span>
         </div>
         <div class="nav-item">
             <span class="nav-icon">⚙️</span>
-            <span>Settings</span>
+            <span>Sozlamalar</span>
         </div>
     </nav>
 
@@ -475,16 +462,23 @@
     <div class="bottom-sheet-overlay" id="bottomSheet" onclick="closeSheetOnBackground(event)">
         <div class="bottom-sheet">
             <div class="sheet-handle"></div>
-            <h3 class="sheet-title">Оформление заказа</h3>
-            <p class="sheet-desc" id="sheetProductName">Товар: ...</p>
+            <h3 class="sheet-header-title" id="sheetCategoryTitle">PUBG Mobile</h3>
 
-            <div class="input-group">
-                <label class="input-label" for="playerIdInput">Player ID (ID Игрока)</label>
-                <input type="text" id="playerIdInput" class="premium-input"
-                    placeholder="Введите ваш ID (напр. 12345678)" inputmode="numeric">
+            <div class="selected-product-box">
+                <div class="sp-left">
+                    <div class="sp-icon" id="sheetIcon">💎</div>
+                    <div class="sp-title" id="sheetName">60 UC</div>
+                </div>
+                <div class="sp-price" id="sheetPrice">11 500 UZS</div>
             </div>
 
-            <button class="sheet-btn" onclick="confirmPurchase()">Подтвердить покупку</button>
+            <div class="input-group">
+                <label class="input-label" for="playerIdInput">User ID</label>
+                <input type="text" id="playerIdInput" class="premium-input" placeholder="ID raqamingizni kiriting"
+                    inputmode="numeric">
+            </div>
+
+            <button class="sheet-btn" onclick="confirmPurchase()">Tasdiqlash</button>
         </div>
     </div>
 
@@ -502,16 +496,22 @@
             // WebApp Init
             tg.expand();
             tg.ready();
-            tg.disableClosingConfirmation(); // By user request
+            tg.disableClosingConfirmation();
+
+            // Set background color of telegram header to match our dark theme
+            tg.setHeaderColor('#0b0f19');
+            tg.setBackgroundColor('#0b0f19');
 
             // Setup Header User Info
             if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
                 const user = tg.initDataUnsafe.user;
-                document.getElementById('userName').textContent = user.first_name || 'Guest';
+                // If username exists, use it, else first name, else "undefined" like in buypin screenshot
+                const displayName = user.username || user.first_name || 'undefined';
+                document.getElementById('userName').textContent = displayName;
 
                 // Set first letter as default avatar if no photo
-                if (user.first_name) {
-                    document.getElementById('defaultAvatar').textContent = user.first_name.charAt(0).toUpperCase();
+                if (displayName !== 'undefined') {
+                    document.getElementById('defaultAvatar').textContent = displayName.charAt(0).toUpperCase();
                 }
 
                 if (user.photo_url) {
@@ -546,10 +546,11 @@
 
         function renderMockDataFallback(err) {
             allProducts = [
-                { id: "mlbb_86", category: "Mobile Legends", name: "86 💎", price: 16000, icon: "💎", badge: "HOT" },
-                { id: "pubg_60", category: "PUBG Mobile", name: "60 UC", price: 15000, icon: "💥", badge: "" },
-                { id: "ff_100", category: "Free Fire", name: "100 💎", price: 12000, icon: "🔥", badge: "x2" },
-                { id: "roblox_80", category: "Roblox", name: "80 R$", price: 18000, icon: "🎮", badge: "" }
+                { id: "pubg_60", category: "PUBG Mobile", name: "60 UC", price: 11500, icon: "💳" },
+                { id: "pubg_325", category: "PUBG Mobile", name: "325 UC", price: 58000, icon: "📦" },
+                { id: "pubg_660", category: "PUBG Mobile", name: "660 UC", price: 115000, icon: "💰" },
+                { id: "mlbb_86", category: "Mobile Legends", name: "86 💎", price: 16000, icon: "💎" },
+                { id: "roblox_80", category: "Roblox", name: "80 R$", price: 18000, icon: "🎮" }
             ];
             renderProducts(allProducts);
         }
@@ -559,7 +560,7 @@
             grid.innerHTML = '';
 
             if (products.length === 0) {
-                grid.innerHTML = '<div class="loading-state">Нет товаров</div>';
+                grid.innerHTML = '<div class="loading-state">Tovarlar topilmadi</div>';
                 return;
             }
 
@@ -567,15 +568,14 @@
                 const priceFormatted = new Intl.NumberFormat('ru-RU').format(p.price);
                 const card = document.createElement('div');
                 card.className = 'product-card';
-                card.onclick = () => openBottomSheet(p.id, p.name, p.price);
-
-                let badgeHTML = p.badge ? `<div class="card-badge">${p.badge}</div>` : '';
+                card.onclick = () => openBottomSheet(p.id, p.category, p.name, p.price, p.icon);
 
                 card.innerHTML = `
-                    ${badgeHTML}
-                    <div class="card-icon">${p.icon || '📦'}</div>
-                    <h4 class="card-title">${p.name}</h4>
-                    <p class="card-price">${priceFormatted} UZS</p>
+                    <div class="card-icon">${p.icon || '💳'}</div>
+                    <div class="card-info">
+                        <h4 class="card-title">${p.name}</h4>
+                        <p class="card-price">${priceFormatted} UZS</p>
+                    </div>
                 `;
                 grid.appendChild(card);
             });
@@ -602,10 +602,15 @@
         }
 
         // Bottom Sheet Logic
-        function openBottomSheet(productId, productName, productPrice) {
+        function openBottomSheet(productId, categoryName, productName, productPrice, iconId) {
             currentProductId = productId;
             const priceFormatted = new Intl.NumberFormat('ru-RU').format(productPrice);
-            document.getElementById('sheetProductName').textContent = `${productName} — ${priceFormatted} UZS`;
+
+            document.getElementById('sheetCategoryTitle').textContent = categoryName;
+            document.getElementById('sheetName').textContent = productName;
+            document.getElementById('sheetPrice').textContent = `${priceFormatted} UZS`;
+            document.getElementById('sheetIcon').textContent = iconId || '💳';
+
             document.getElementById('playerIdInput').value = '';
 
             const overlay = document.getElementById('bottomSheet');
@@ -630,7 +635,7 @@
 
             if (!playerId) {
                 if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
-                tg.showAlert("Пожалуйста, введите Player ID!");
+                tg.showAlert("Iltimos, User ID kiriting!");
                 return;
             }
 

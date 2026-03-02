@@ -20,8 +20,17 @@
             --button-text-color: var(--tg-theme-button-text-color, #ffffff);
             --secondary-bg-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
 
-            --border-radius: 12px;
-            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --border-radius: 16px;
+            --font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+            --accent-glow: rgba(36, 129, 204, 0.2);
+            --card-bg: rgba(var(--tg-theme-bg-color-rgb, 255, 255, 255), 0.7);
+            --glass-border: 1px solid rgba(150, 150, 150, 0.1);
+        }
+
+        /* Basic Reset & Body */
+        * {
+            box-sizing: border-box;
         }
 
         body {
@@ -31,232 +40,253 @@
             color: var(--text-color);
             font-family: var(--font-family);
             -webkit-font-smoothing: antialiased;
-            padding-bottom: 80px;
+            padding-bottom: 90px;
             /* Space for bottom nav */
+            overflow-x: hidden;
         }
 
-        /* Profile & Balance Area */
-        .header-section {
-            background-color: var(--bg-color);
-            padding: 20px;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-            margin-bottom: 20px;
-        }
-
-        .profile-line {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .profile-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background-color: var(--secondary-bg-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            overflow: hidden;
-            object-fit: cover;
-        }
-
-        .profile-name {
-            font-size: 16px;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        .balance-card {
-            background: linear-gradient(135deg, var(--button-color), #4facfe);
-            border-radius: var(--border-radius);
-            padding: 20px;
-            color: white;
-            box-shadow: 0 4px 15px rgba(36, 129, 204, 0.3);
+        /* 1. HEADER */
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 16px 20px;
+            background: var(--bg-color);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            border-bottom: var(--glass-border);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
-        .balance-info {
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--button-color), #4facfe);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            object-fit: cover;
+            box-shadow: 0 4px 10px var(--accent-glow);
+        }
+
+        .greeting {
             display: flex;
             flex-direction: column;
         }
 
-        .balance-label {
-            font-size: 13px;
-            opacity: 0.9;
-            margin-bottom: 4px;
-        }
-
-        .balance-amount {
-            font-size: 24px;
-            font-weight: bold;
+        .greeting-text {
+            font-size: 12px;
+            color: var(--hint-color);
             margin: 0;
         }
 
-        .topup-btn {
-            background-color: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            padding: 10px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            backdrop-filter: blur(4px);
-            transition: all 0.2s;
+        .user-name {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.3px;
         }
 
-        .topup-btn:active {
+        .header-right {
+            display: flex;
+            align-items: center;
+            background: var(--secondary-bg-color);
+            padding: 6px 14px;
+            border-radius: 20px;
+            gap: 6px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: var(--glass-border);
+        }
+
+        .header-right:active {
             transform: scale(0.95);
-            background-color: rgba(255, 255, 255, 0.3);
         }
 
-        /* Horizontal Scrollable Categories */
-        .categories-wrapper {
-            padding: 0 15px;
-            margin-bottom: 15px;
-            overflow-x: auto;
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            /* Firefox */
+        .coin-icon {
+            font-size: 18px;
         }
 
-        .categories-wrapper::-webkit-scrollbar {
-            display: none;
-            /* Chrome/Safari */
-        }
-
-        .chip {
-            display: inline-block;
-            background-color: var(--bg-color);
+        .balance-value {
+            font-weight: 800;
+            font-size: 15px;
             color: var(--text-color);
-            padding: 8px 16px;
-            border-radius: 20px;
-            margin-right: 10px;
-            font-size: 14px;
+        }
+
+        /* 2. MAIN TITLE */
+        .page-title {
+            padding: 24px 20px 16px;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        /* 3. CATEGORIES (Pills) */
+        .categories-scroll {
+            display: flex;
+            gap: 12px;
+            padding: 0 20px 20px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .categories-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-chip {
+            padding: 10px 20px;
+            border-radius: 24px;
+            background: var(--bg-color);
+            color: var(--text-color);
             font-weight: 600;
+            font-size: 14px;
+            white-space: nowrap;
             cursor: pointer;
-            border: 1px solid transparent;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            transition: all 0.2s;
+            border: var(--glass-border);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        .chip.active {
-            background-color: var(--button-color);
+        .category-chip.active {
+            background: var(--button-color);
             color: var(--button-text-color);
+            box-shadow: 0 4px 12px var(--accent-glow);
+            border-color: transparent;
         }
 
-        /* CSS Grid Catalog */
-        .catalog-container {
-            padding: 0 15px;
-            margin-bottom: 20px;
-        }
-
-        .products-grid {
+        /* 4. PRODUCT GRID */
+        .grid-container {
+            padding: 0 20px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
         }
 
+        /* 5. PRODUCT CARDS (Premium) */
         .product-card {
-            background-color: var(--bg-color);
+            background: var(--bg-color);
             border-radius: var(--border-radius);
-            padding: 15px;
+            padding: 16px;
             position: relative;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border: var(--glass-border);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+            transition: transform 0.2s, box-shadow 0.2s;
             cursor: pointer;
-            transition: transform 0.1s, box-shadow 0.1s;
+            overflow: hidden;
         }
 
         .product-card:active {
             transform: scale(0.96);
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
         }
 
-        .product-badge {
+        /* Optional glassmorphism overlay */
+        .product-card::before {
+            content: '';
             position: absolute;
-            top: 8px;
-            right: 8px;
-            background-color: #ff3b30;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+            border-radius: var(--border-radius);
+            pointer-events: none;
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #FF3B30, #FF6B00);
             color: white;
             font-size: 10px;
-            font-weight: bold;
-            padding: 3px 6px;
-            border-radius: 6px;
-        }
-
-        .product-icon {
-            font-size: 40px;
-            margin-bottom: 10px;
-            margin-top: 5px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .product-title {
-            font-size: 13px;
-            font-weight: 700;
-            text-align: center;
-            margin: 0 0 5px 0;
-            line-height: 1.2;
-            color: var(--text-color);
-        }
-
-        .product-price {
-            font-size: 13px;
-            color: var(--button-color);
             font-weight: 800;
-            text-align: center;
+            padding: 4px 8px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 6px rgba(255, 59, 48, 0.3);
+        }
+
+        .card-icon {
+            font-size: 38px;
+            margin-bottom: 12px;
+            align-self: flex-start;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin: 0 0 6px 0;
+            color: var(--text-color);
+            line-height: 1.2;
+        }
+
+        .card-price {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--button-color);
+            /* Cyan/Gold accent via theme */
             margin: 0;
             margin-top: auto;
-            background: var(--secondary-bg-color);
-            padding: 4px 10px;
-            border-radius: 12px;
-            width: 100%;
-            box-sizing: border-box;
         }
 
+        /* Loading State */
         .loading-state {
             grid-column: 1 / -1;
             text-align: center;
-            padding: 30px;
+            padding: 40px;
             color: var(--hint-color);
-            font-size: 14px;
+            font-size: 15px;
+            font-weight: 500;
         }
 
-        /* Bottom Nav */
+        /* 6. BOTTOM NAVIGATION BAR */
         .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            background-color: var(--bg-color);
+            background: var(--bg-color);
             display: flex;
             justify-content: space-around;
-            padding: 12px 0;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 12px 0 20px;
+            /* Extra padding for iOS home indicator */
+            border-top: var(--glass-border);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.04);
             z-index: 100;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
         }
 
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
             color: var(--hint-color);
-            font-size: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.2s;
+            flex: 1;
         }
 
         .nav-item.active {
@@ -264,238 +294,264 @@
         }
 
         .nav-icon {
-            font-size: 20px;
+            font-size: 22px;
+            transition: transform 0.2s;
         }
 
-        /* Modal */
-        .modal-overlay {
+        .nav-item:active .nav-icon {
+            transform: scale(0.9);
+        }
+
+        /* 7. PURCHASE MODAL (BOTTOM SHEET) */
+        .bottom-sheet-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
             display: flex;
             align-items: flex-end;
-            justify-content: center;
             z-index: 1000;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s;
+            transition: opacity 0.3s ease;
         }
 
-        .modal-overlay.active {
+        .bottom-sheet-overlay.active {
             opacity: 1;
             pointer-events: auto;
         }
 
-        .modal-content {
-            background-color: var(--bg-color);
+        .bottom-sheet {
+            background: var(--bg-color);
             width: 100%;
-            border-radius: 20px 20px 0 0;
-            padding: 24px;
-            box-sizing: border-box;
+            border-radius: 24px 24px 0 0;
+            padding: 30px 24px;
             transform: translateY(100%);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            max-width: 500px;
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
         }
 
-        .modal-overlay.active .modal-content {
+        .bottom-sheet-overlay.active .bottom-sheet {
             transform: translateY(0);
         }
 
-        .modal-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin: 0 0 10px 0;
+        .sheet-handle {
+            width: 40px;
+            height: 4px;
+            background: var(--hint-color);
+            border-radius: 2px;
+            margin: -15px auto 20px;
+            opacity: 0.5;
         }
 
-        .modal-desc {
+        .sheet-title {
+            font-size: 22px;
+            font-weight: 800;
+            margin: 0 0 8px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .sheet-desc {
+            font-size: 15px;
             color: var(--hint-color);
-            font-size: 14px;
-            margin-bottom: 20px;
+            margin: 0 0 24px 0;
         }
 
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .input-label {
             display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--hint-color);
         }
 
-        .modern-input {
+        .premium-input {
             width: 100%;
-            padding: 14px;
-            border: 2px solid var(--secondary-bg-color);
-            border-radius: 12px;
-            background-color: var(--secondary-bg-color);
-            color: var(--text-color);
+            padding: 16px;
+            background: var(--secondary-bg-color);
+            border: 2px solid transparent;
+            border-radius: 14px;
             font-size: 16px;
-            box-sizing: border-box;
+            color: var(--text-color);
+            font-family: inherit;
             outline: none;
-            transition: border-color 0.2s;
+            transition: all 0.3s;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
         }
 
-        .modern-input:focus {
+        .premium-input:focus {
             border-color: var(--button-color);
+            background: var(--bg-color);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0), 0 0 0 4px var(--accent-glow);
         }
 
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 14px;
-            border-radius: 12px;
+        .sheet-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--button-color), #4facfe);
+            color: white;
+            border: none;
+            border-radius: 14px;
             font-size: 16px;
             font-weight: 700;
-            border: none;
             cursor: pointer;
+            box-shadow: 0 6px 15px var(--accent-glow);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .btn-cancel {
-            background-color: var(--secondary-bg-color);
-            color: var(--text-color);
-        }
-
-        .btn-confirm {
-            background-color: var(--button-color);
-            color: var(--button-text-color);
+        .sheet-btn:active {
+            transform: scale(0.97);
+            box-shadow: 0 2px 8px var(--accent-glow);
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Header & Balance -->
-    <div class="header-section">
-        <div class="profile-line">
-            <img id="userAvatarWrap" class="profile-avatar" src="" style="display:none;">
-            <div id="defaultAvatar" class="profile-avatar">👤</div>
-            <div class="profile-name" id="userName">Гость</div>
-        </div>
-
-        <div class="balance-card">
-            <div class="balance-info">
-                <span class="balance-label">Кошелек</span>
-                <span class="balance-amount">Баланс UZS</span>
+    <!-- 1. HEADER -->
+    <header class="header">
+        <div class="header-left">
+            <img id="userAvatarWrap" class="avatar" src="" style="display:none;">
+            <div id="defaultAvatar" class="avatar">U</div>
+            <div class="greeting">
+                <p class="greeting-text">Welcome back,</p>
+                <h2 class="user-name" id="userName">Guest</h2>
             </div>
-            <button class="topup-btn" onclick="sendTopupAction()">Пополнить</button>
         </div>
-    </div>
-
-    <!-- Category Chips -->
-    <div class="categories-wrapper" id="categoriesWrapper">
-        <div class="chip active" onclick="filterCategory('All', this)">🔥 Все</div>
-        <div class="chip" onclick="filterCategory('Mobile Legends', this)">Mobile Legends</div>
-        <div class="chip" onclick="filterCategory('PUBG Mobile', this)">PUBG Mobile</div>
-        <div class="chip" onclick="filterCategory('Free Fire', this)">Free Fire</div>
-        <div class="chip" onclick="filterCategory('Roblox', this)">Roblox</div>
-    </div>
-
-    <!-- Catalog Grid -->
-    <div class="catalog-container">
-        <div class="products-grid" id="productsGrid">
-            <div class="loading-state">Загрузка каталога...</div>
+        <div class="header-right" onclick="sendTopupAction()">
+            <span class="coin-icon">💰</span>
+            <span class="balance-value" id="userBalance">0</span>
         </div>
+    </header>
+
+    <!-- 2. TITLE -->
+    <h1 class="page-title">Выберите товар</h1>
+
+    <!-- 3. CATEGORIES -->
+    <div class="categories-scroll" id="categoriesWrapper">
+        <div class="category-chip active" onclick="filterCategory('All', this)">🔥 All</div>
+        <div class="category-chip" onclick="filterCategory('Mobile Legends', this)">Mobile Legends</div>
+        <div class="category-chip" onclick="filterCategory('PUBG Mobile', this)">PUBG Mobile</div>
+        <div class="category-chip" onclick="filterCategory('Free Fire', this)">Free Fire</div>
+        <div class="category-chip" onclick="filterCategory('Roblox', this)">Roblox</div>
     </div>
 
-    <!-- Bottom Nav -->
-    <div class="bottom-nav">
+    <!-- 4 & 5. PRODUCT GRID & CARDS -->
+    <main class="grid-container" id="productsGrid">
+        <div class="loading-state">Загрузка каталога...</div>
+    </main>
+
+    <!-- 6. BOTTOM NAVIGATION -->
+    <nav class="bottom-nav">
         <div class="nav-item active">
-            <div class="nav-icon">🏠</div>
-            <span>Главная</span>
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
         </div>
         <div class="nav-item" onclick="sendTopupAction()">
-            <div class="nav-icon">钱包</div>
-            <span>Кошелек</span>
+            <span class="nav-icon">👛</span>
+            <span>Wallet</span>
         </div>
         <div class="nav-item">
-            <div class="nav-icon">🧾</div>
-            <span>История</span>
+            <span class="nav-icon">📜</span>
+            <span>History</span>
         </div>
-    </div>
+        <div class="nav-item">
+            <span class="nav-icon">⚙️</span>
+            <span>Settings</span>
+        </div>
+    </nav>
 
-    <!-- Purchase Modal -->
-    <div class="modal-overlay" id="buyModal">
-        <div class="modal-content">
-            <h3 class="modal-title">Оформление заказа</h3>
-            <p class="modal-desc" id="modalProductName">Товар: ...</p>
+    <!-- 7. PURCHASE MODAL (BOTTOM SHEET) -->
+    <div class="bottom-sheet-overlay" id="bottomSheet" onclick="closeSheetOnBackground(event)">
+        <div class="bottom-sheet">
+            <div class="sheet-handle"></div>
+            <h3 class="sheet-title">Оформление заказа</h3>
+            <p class="sheet-desc" id="sheetProductName">Товар: ...</p>
 
             <div class="input-group">
-                <label class="input-label" for="playerIdInput">Введите ID игрока:</label>
-                <input type="text" id="playerIdInput" class="modern-input" placeholder="Например: 12345678"
-                    inputmode="numeric">
+                <label class="input-label" for="playerIdInput">Player ID (ID Игрока)</label>
+                <input type="text" id="playerIdInput" class="premium-input"
+                    placeholder="Введите ваш ID (напр. 12345678)" inputmode="numeric">
             </div>
 
-            <div class="modal-buttons">
-                <button class="btn btn-cancel" onclick="closeModal()">Отмена</button>
-                <button class="btn btn-confirm" onclick="confirmPurchase()">Купить</button>
-            </div>
+            <button class="sheet-btn" onclick="confirmPurchase()">Подтвердить покупку</button>
         </div>
     </div>
 
-    <!-- Logic -->
+    <!-- MAIN LOGIC -->
     <script>
         const tg = window.Telegram.WebApp;
 
         let currentProductId = null;
         let allProducts = [];
 
-        // Configure API URL (For Vercel / Local)
-        // Adjust this if you deploy the backend somewhere else. Localhost works for local dev testing.
-        // For production, change to your actual backend domain e.g., 'https://api.yourdomain.com'
+        // API Endpoint for Catalog
         const API_URL = 'http://localhost:8080/api/catalog';
 
         document.addEventListener("DOMContentLoaded", () => {
+            // WebApp Init
             tg.expand();
             tg.ready();
+            tg.disableClosingConfirmation(); // By user request
 
-            // Set up user info
+            // Setup Header User Info
             if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
                 const user = tg.initDataUnsafe.user;
-                document.getElementById('userName').textContent = user.first_name || 'Пользователь';
+                document.getElementById('userName').textContent = user.first_name || 'Guest';
+
+                // Set first letter as default avatar if no photo
+                if (user.first_name) {
+                    document.getElementById('defaultAvatar').textContent = user.first_name.charAt(0).toUpperCase();
+                }
+
                 if (user.photo_url) {
                     const img = document.getElementById('userAvatarWrap');
                     img.src = user.photo_url;
-                    img.style.display = 'block';
+                    img.style.display = 'flex';
                     document.getElementById('defaultAvatar').style.display = 'none';
                 }
             }
 
-            // Fetch Catalog
+            // Fetch Data
             fetchCatalog();
         });
 
         async function fetchCatalog() {
             try {
-                // Fetch from the Python aiohttp backend
                 const response = await fetch(API_URL);
-                if (!response.ok) throw new Error('Network response was not ok');
+                if (!response.ok) throw new Error('API Error');
                 const data = await response.json();
 
                 if (data.status === 'success') {
                     allProducts = data.data;
                     renderProducts(allProducts);
                 } else {
-                    showError("Не удалось загрузить товары.");
+                    renderMockDataFallback("Failed to load");
                 }
             } catch (error) {
                 console.error("Error fetching catalog:", error);
-
-                // Fallback local mock data just in case API fails (for demo purposes)
-                allProducts = [
-                    { id: "mlbb_86", category: "Mobile Legends", name: "86 💎", price: 16000, icon: "💎", badge: "-15%" },
-                    { id: "pubg_60", category: "PUBG Mobile", name: "60 UC", price: 15000, icon: "💥", badge: "Hot" }
-                ];
-                renderProducts(allProducts);
+                renderMockDataFallback(error);
             }
+        }
+
+        function renderMockDataFallback(err) {
+            allProducts = [
+                { id: "mlbb_86", category: "Mobile Legends", name: "86 💎", price: 16000, icon: "💎", badge: "HOT" },
+                { id: "pubg_60", category: "PUBG Mobile", name: "60 UC", price: 15000, icon: "💥", badge: "" },
+                { id: "ff_100", category: "Free Fire", name: "100 💎", price: 12000, icon: "🔥", badge: "x2" },
+                { id: "roblox_80", category: "Roblox", name: "80 R$", price: 18000, icon: "🎮", badge: "" }
+            ];
+            renderProducts(allProducts);
         }
 
         function renderProducts(products) {
@@ -503,30 +559,24 @@
             grid.innerHTML = '';
 
             if (products.length === 0) {
-                grid.innerHTML = '<div class="loading-state">Нет товаров в этой категории.</div>';
+                grid.innerHTML = '<div class="loading-state">Нет товаров</div>';
                 return;
             }
 
             products.forEach(p => {
-                // Formatting price
                 const priceFormatted = new Intl.NumberFormat('ru-RU').format(p.price);
-
                 const card = document.createElement('div');
                 card.className = 'product-card';
-                card.onclick = () => openBuyModal(p.id, p.name, p.price);
+                card.onclick = () => openBottomSheet(p.id, p.name, p.price);
 
-                let badgeHTML = '';
-                if (p.badge) {
-                    badgeHTML = `<div class="product-badge">${p.badge}</div>`;
-                }
+                let badgeHTML = p.badge ? `<div class="card-badge">${p.badge}</div>` : '';
 
                 card.innerHTML = `
                     ${badgeHTML}
-                    <div class="product-icon">${p.icon || '📦'}</div>
-                    <h4 class="product-title">${p.name}</h4>
-                    <div class="product-price">${priceFormatted} UZS</div>
+                    <div class="card-icon">${p.icon || '📦'}</div>
+                    <h4 class="card-title">${p.name}</h4>
+                    <p class="card-price">${priceFormatted} UZS</p>
                 `;
-
                 grid.appendChild(card);
             });
         }
@@ -534,8 +584,7 @@
         function filterCategory(category, element) {
             if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
 
-            // Update active chip
-            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
             element.classList.add('active');
 
             if (category === 'All') {
@@ -552,19 +601,28 @@
             tg.sendData(data);
         }
 
-        function openBuyModal(productId, productName, productPrice) {
+        // Bottom Sheet Logic
+        function openBottomSheet(productId, productName, productPrice) {
             currentProductId = productId;
             const priceFormatted = new Intl.NumberFormat('ru-RU').format(productPrice);
-            document.getElementById('modalProductName').textContent = `${productName} — ${priceFormatted} UZS`;
+            document.getElementById('sheetProductName').textContent = `${productName} — ${priceFormatted} UZS`;
             document.getElementById('playerIdInput').value = '';
 
-            document.getElementById('buyModal').classList.add('active');
+            const overlay = document.getElementById('bottomSheet');
+            overlay.classList.add('active');
+
             if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
         }
 
-        function closeModal() {
-            document.getElementById('buyModal').classList.remove('active');
+        function closeBottomSheet() {
+            document.getElementById('bottomSheet').classList.remove('active');
             currentProductId = null;
+        }
+
+        function closeSheetOnBackground(e) {
+            if (e.target.id === 'bottomSheet') {
+                closeBottomSheet();
+            }
         }
 
         function confirmPurchase() {
@@ -572,7 +630,7 @@
 
             if (!playerId) {
                 if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
-                tg.showAlert("Пожалуйста, введите ID игрока!");
+                tg.showAlert("Пожалуйста, введите Player ID!");
                 return;
             }
 
@@ -585,7 +643,7 @@
             });
 
             tg.sendData(data);
-            closeModal();
+            closeBottomSheet();
         }
     </script>
 </body>

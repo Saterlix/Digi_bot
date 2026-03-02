@@ -27,7 +27,7 @@ class Config:
     PORT: int = int(os.getenv("PORT", "8080"))
     
     # Database Configuration
-    DATABASE_PATH: str = os.getenv("DATABASE_PATH", "antigravity.db")
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "")
     
     @classmethod
     def validate(cls) -> list[str]:
@@ -37,10 +37,6 @@ class Config:
         """
         errors = []
         
-        if not cls.DIGIFLAZZ_USER:
-            errors.append("DIGIFLAZZ_USER is required")
-        if not cls.DIGIFLAZZ_KEY:
-            errors.append("DIGIFLAZZ_KEY is required")
         if not cls.BOT_TOKEN:
             errors.append("BOT_TOKEN is required")
             

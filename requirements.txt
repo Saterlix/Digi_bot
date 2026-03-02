@@ -1,0 +1,7 @@
+
+fastapi
+uvicorn
+aiogram
+asyncpg
+python-dotenv
+requests

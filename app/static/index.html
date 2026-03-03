@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ThunderPay</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header" id="header">
+            <div class="header-left">
+                <h1 class="logo">⚡ ThunderPay</h1>
+            </div>
+            <div class="header-right">
+                <div class="balance-badge" id="balance-badge" onclick="router.navigate('deposit')">
+                    <span class="balance-icon">💰</span>
+                    <span id="user-balance">0</span> <small>UZS</small>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main id="page-content"></main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav" id="bottom-nav">
+            <button class="nav-btn active" data-page="home" onclick="router.navigate('home')">
+                <span class="nav-icon">🎮</span><span class="nav-label">Каталог</span>
+            </button>
+            <button class="nav-btn" data-page="deposit" onclick="router.navigate('deposit')">
+                <span class="nav-icon">💳</span><span class="nav-label">Пополнить</span>
+            </button>
+            <button class="nav-btn" data-page="orders" onclick="router.navigate('orders')">
+                <span class="nav-icon">📦</span><span class="nav-label">Заказы</span>
+            </button>
+            <button class="nav-btn" data-page="profile" onclick="router.navigate('profile')">
+                <span class="nav-icon">👤</span><span class="nav-label">Профиль</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Bottom Sheet (универсальный) -->
+    <div class="overlay" id="overlay" onclick="closeSheet()"></div>
+    <div class="bottom-sheet" id="bottom-sheet">
+        <div class="sheet-indicator"></div>
+        <div class="sheet-content" id="sheet-content"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

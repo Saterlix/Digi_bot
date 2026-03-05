@@ -4,257 +4,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Donate Shop</title>
-
-    <!-- Telegram Web App API -->
+    <title>ThunderPay</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* 
-         Premium Dynamic Theme
-        */
-        :root {
-            --bg-main: #0b0f19;
-            --bg-card: #1c1f2e;
-            --bg-nav: #161824;
-            --accent: #5e5ce6;
-            --accent-glow: rgba(94, 92, 230, 0.4);
-            --text-main: #ffffff;
-            --text-muted: #8e93a6;
-            --price-color: #00d2ff;
-            --border-light: rgba(255, 255, 255, 0.05);
-            --border-input: rgba(255, 255, 255, 0.08);
-
-            --border-radius: 16px;
-            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        [data-theme="light"] {
-            --bg-main: #f4f6f8;
-            --bg-card: #ffffff;
-            --bg-nav: #ffffff;
-            --accent: #5e5ce6;
-            --accent-glow: rgba(94, 92, 230, 0.2);
-            --text-main: #1a1b2e;
-            --text-muted: #6b7280;
-            --price-color: #0088cc;
-            --border-light: rgba(0, 0, 0, 0.06);
-            --border-input: rgba(0, 0, 0, 0.1);
-        }
-
-        * {
+        /* ════════════════════════════════════════
+           CSS RESET & VARIABLES
+           ════════════════════════════════════════ */
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: var(--tg-theme-bg-color, #0b0f19);
+            --bg-card: var(--tg-theme-secondary-bg-color, #141a2a);
+            --text: var(--tg-theme-text-color, #e8ecf4);
+            --text-muted: var(--tg-theme-hint-color, #6b7a99);
+            --accent: var(--tg-theme-button-color, #6c5ce7);
+            --accent-text: var(--tg-theme-button-text-color, #ffffff);
+            --link: var(--tg-theme-link-color, #7c6ff7);
+            --danger: #ff4757;
+            --success: #2ed573;
+            --warning: #ffa502;
+            --border: rgba(255, 255, 255, 0.06);
+            --glass: rgba(255, 255, 255, 0.04);
+            --radius: 14px;
+            --nav-h: 64px;
+            --header-h: 56px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            font-family: var(--font-family);
-            -webkit-font-smoothing: antialiased;
-            padding-bottom: 90px;
-            /* Space for bottom nav */
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
             overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* 1. HEADER (Buypin Exact Match) */
+        /* ════════════════════════════════════════
+           HEADER
+           ════════════════════════════════════════ */
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 20px 10px;
-            background: var(--bg-main);
-            position: sticky;
+            position: fixed;
             top: 0;
-            z-index: 50;
-        }
-
-        .header-left {
+            left: 0;
+            right: 0;
+            height: var(--header-h);
             display: flex;
             align-items: center;
-            gap: 12px;
+            justify-content: space-between;
+            padding: 0 16px;
+            background: rgba(11, 15, 25, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
         }
 
-        .avatar {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: #2a2d3e;
+        .header-brand {
             display: flex;
             align-items: center;
-            justify-content: center;
-            color: var(--text-main);
-            font-weight: bold;
-            font-size: 16px;
-            object-fit: cover;
+            gap: 8px;
+            font-size: 18px;
+            font-weight: 800;
         }
 
-        .user-name {
-            font-size: 16px;
-            font-weight: 700;
-            margin: 0;
+        .header-brand span {
+            font-size: 22px;
         }
 
-        .header-right {
+        .header-balance {
             display: flex;
             align-items: center;
+            gap: 6px;
             background: var(--accent);
+            color: var(--accent-text);
             padding: 6px 14px;
             border-radius: 20px;
-            gap: 6px;
+            font-size: 13px;
+            font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 4px 15px var(--accent-glow);
-            transition: transform 0.2s;
+            transition: transform .15s;
         }
 
-        .header-right:active {
+        .header-balance:active {
             transform: scale(0.95);
         }
 
-        .coin-icon {
-            font-size: 16px;
-            font-weight: bold;
-            color: #ffd700;
+        /* ════════════════════════════════════════
+           MAIN CONTENT AREA
+           ════════════════════════════════════════ */
+        .content {
+            padding-top: calc(var(--header-h) + 12px);
+            padding-bottom: calc(var(--nav-h) + 24px);
+            padding-left: 16px;
+            padding-right: 16px;
+            min-height: 100vh;
         }
 
-        .balance-value {
-            font-weight: 800;
-            font-size: 14px;
-            color: #fff;
-        }
-
-        /* 2. TITLE */
-        .page-title {
-            padding: 10px 20px 16px;
-            margin: 0;
-            font-size: 22px;
-            font-weight: 800;
-            letter-spacing: -0.3px;
-        }
-
-        /* 3. CATEGORIES (Pills) */
-        .categories-scroll {
-            display: flex;
-            gap: 10px;
-            padding: 0 20px 20px;
-            overflow-x: auto;
-            scrollbar-width: none;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .categories-scroll::-webkit-scrollbar {
+        .page {
             display: none;
+            animation: fadeUp .3s ease;
         }
 
-        .category-chip {
-            padding: 8px 18px;
-            border-radius: 20px;
-            background: var(--bg-card);
-            color: var(--text-muted);
-            font-weight: 600;
-            font-size: 14px;
-            white-space: nowrap;
-            cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.2s;
+        .page.active {
+            display: block;
         }
 
-        .category-chip.active {
-            background: var(--accent);
-            color: #ffffff;
-            border-color: transparent;
-            box-shadow: 0 4px 12px var(--accent-glow);
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        /* 4. PRODUCT GRID (2 Columns) */
-        .grid-container {
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        /* 5. PRODUCT CARDS (Horizontal Layout inside) */
-        .product-card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 14px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            /* Vertical center */
-            justify-content: space-between;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            transition: transform 0.1s, box-shadow 0.1s;
-            cursor: pointer;
-            overflow: hidden;
-            min-height: 85px;
-        }
-
-        .product-card:active {
-            transform: scale(0.96);
-            background: #232738;
-        }
-
-        .card-icon {
-            font-size: 32px;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-            flex-shrink: 0;
-        }
-
-        .card-info {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            /* Right align text like Buypin */
-            flex-grow: 1;
-            margin-left: 10px;
-        }
-
-        .card-title {
-            font-size: 14px;
-            font-weight: 700;
-            margin: 0 0 4px 0;
-            color: var(--text-main);
-            text-align: right;
-        }
-
-        .card-price {
-            font-size: 12px;
-            font-weight: 800;
-            color: var(--price-color);
-            margin: 0;
-            background: rgba(0, 210, 255, 0.1);
-            padding: 2px 6px;
-            border-radius: 6px;
-            text-align: right;
-        }
-
-        /* Loading State */
-        .loading-state {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 40px;
-            color: var(--text-muted);
-            font-size: 15px;
-            font-weight: 500;
-        }
-
-        /* 6. BOTTOM NAVIGATION BAR (Asosiy, Hamyon, Tarix, Sozlamalar) */
+        /* ════════════════════════════════════════
+           BOTTOM NAVIGATION
+           ════════════════════════════════════════ */
         .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
-            width: 100%;
-            background: var(--bg-nav);
+            right: 0;
+            height: var(--nav-h);
             display: flex;
+            align-items: center;
             justify-content: space-around;
-            padding: 12px 0 16px;
-            /* Padding for iOS */
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(11, 15, 25, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
             z-index: 100;
         }
 
@@ -262,819 +151,1285 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
-            color: var(--text-muted);
-            font-size: 11px;
-            font-weight: 600;
+            gap: 3px;
             cursor: pointer;
-            transition: color 0.2s;
-            flex: 1;
+            transition: transform .15s;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .nav-item.active {
-            color: var(--price-color);
-            /* Bright indicator for active */
+        .nav-item:active {
+            transform: scale(0.9);
         }
 
         .nav-icon {
-            font-size: 20px;
+            font-size: 22px;
+            transition: .2s;
         }
 
-        /* 7. PURCHASE MODAL (BOTTOM SHEET) */
-        .bottom-sheet-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
+        .nav-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: color .2s;
+        }
+
+        .nav-item.active .nav-label {
+            color: var(--accent);
+        }
+
+        .nav-item.active .nav-icon {
+            transform: scale(1.15);
+        }
+
+        /* ════════════════════════════════════════
+           SECTION TITLES
+           ════════════════════════════════════════ */
+        .section-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: -10px;
+            margin-bottom: 16px;
+        }
+
+        /* ════════════════════════════════════════
+           CATEGORY CHIPS
+           ════════════════════════════════════════ */
+        .chips {
             display: flex;
-            align-items: flex-end;
-            z-index: 1000;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            scrollbar-width: none;
+        }
+
+        .chips::-webkit-scrollbar {
+            display: none;
+        }
+
+        .chip {
+            flex-shrink: 0;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .chip.active {
+            background: var(--accent);
+            color: var(--accent-text);
+            border-color: var(--accent);
+        }
+
+        /* ════════════════════════════════════════
+           GAME CARDS GRID
+           ════════════════════════════════════════ */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .game-card {
+            position: relative;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 12px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: transform .15s, box-shadow .2s;
+            overflow: hidden;
+        }
+
+        .game-card:active {
+            transform: scale(0.97);
+        }
+
+        .game-card-emoji {
+            font-size: 36px;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+        }
+
+        .game-card img {
+            width: 52px;
+            height: 52px;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+        }
+
+        .game-card-name {
+            font-size: 13px;
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .game-card-tag {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .game-card-glow {
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.25;
+            pointer-events: none;
+        }
+
+        /* ════════════════════════════════════════
+           BOTTOM SHEET OVERLAY
+           ════════════════════════════════════════ */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease;
+            transition: opacity .25s;
         }
 
-        .bottom-sheet-overlay.active {
+        .overlay.show {
             opacity: 1;
             pointer-events: auto;
         }
 
-        .bottom-sheet {
+        .sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
             background: var(--bg-card);
-            width: 100%;
             border-radius: 20px 20px 0 0;
-            padding: 24px;
+            padding: 12px 20px 32px;
+            z-index: 201;
             transform: translateY(100%);
-            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform .3s cubic-bezier(.22, .68, 0, 1);
         }
 
-        .bottom-sheet-overlay.active .bottom-sheet {
+        .sheet.show {
             transform: translateY(0);
         }
 
         .sheet-handle {
-            width: 36px;
+            width: 40px;
             height: 4px;
-            background: #3e4256;
+            background: rgba(255, 255, 255, 0.15);
             border-radius: 2px;
-            margin: -10px auto 20px;
+            margin: 0 auto 16px;
         }
 
-        .sheet-header-title {
-            text-align: center;
+        .sheet-title {
             font-size: 18px;
             font-weight: 800;
-            margin: 0 0 20px 0;
-            color: var(--text-main);
+            margin-bottom: 4px;
         }
 
-        /* Selected product info inside modal */
-        .selected-product-box {
-            background: var(--bg-main);
+        .sheet-price {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        /* ════════════════════════════════════════
+           FORM ELEMENTS
+           ════════════════════════════════════════ */
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .input-field {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 16px;
+            padding: 14px 16px;
+            font-size: 15px;
+            color: var(--text);
+            outline: none;
+            transition: border-color .2s;
+            font-family: inherit;
+        }
+
+        .input-field:focus {
+            border-color: var(--accent);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            background: var(--accent);
+            color: var(--accent-text);
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .15s, opacity .2s;
+            font-family: inherit;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            font-family: inherit;
+        }
+
+        /* ════════════════════════════════════════
+           WALLET PAGE
+           ════════════════════════════════════════ */
+        .balance-hero {
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border-radius: var(--radius);
+            padding: 28px 24px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .balance-hero-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 4px;
+        }
+
+        .balance-hero-amount {
+            font-size: 32px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .balance-hero-amount small {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .amount-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .amount-btn {
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--glass);
+            color: var(--text);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .2s;
+            font-family: inherit;
+        }
+
+        .amount-btn.selected {
+            background: var(--accent);
+            color: var(--accent-text);
+            border-color: var(--accent);
+        }
+
+        /* ════════════════════════════════════════
+           HISTORY PAGE
+           ════════════════════════════════════════ */
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            margin-bottom: 10px;
+        }
+
+        .history-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .history-info {
+            flex: 1;
+        }
+
+        .history-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .history-date {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .history-amount {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .history-amount.debit {
+            color: var(--danger);
+        }
+
+        .history-amount.credit {
+            color: var(--success);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-success {
+            background: rgba(46, 213, 115, 0.15);
+            color: var(--success);
+        }
+
+        .status-pending {
+            background: rgba(255, 165, 2, 0.15);
+            color: var(--warning);
+        }
+
+        .status-failed {
+            background: rgba(255, 71, 87, 0.15);
+            color: var(--danger);
+        }
+
+        /* ════════════════════════════════════════
+           SETTINGS PAGE
+           ════════════════════════════════════════ */
+        .settings-group {
+            margin-bottom: 24px;
+        }
+
+        .settings-group-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .settings-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.03);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: transform .15s;
         }
 
-        .sp-left {
+        .settings-item:active {
+            transform: scale(0.98);
+        }
+
+        .settings-item-left {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .sp-icon {
+        .settings-item-icon {
+            font-size: 22px;
+        }
+
+        .settings-item-label {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .settings-item-value {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .settings-item-arrow {
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        .lang-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .lang-option.active {
+            border-color: var(--accent);
+            background: rgba(108, 92, 231, 0.08);
+        }
+
+        .lang-option-flag {
             font-size: 24px;
         }
 
-        .sp-title {
-            font-weight: 700;
-            font-size: 15px;
-            margin: 0;
-        }
-
-        .sp-price {
-            color: var(--price-color);
-            font-weight: 800;
+        .lang-option-name {
             font-size: 14px;
-            margin: 0;
-            text-align: right;
-        }
-
-        .input-group {
-            margin-bottom: 24px;
-        }
-
-        .input-label {
-            display: block;
-            font-size: 13px;
             font-weight: 600;
-            margin-bottom: 8px;
+            flex: 1;
+        }
+
+        .lang-option-check {
+            font-size: 18px;
+            color: var(--accent);
+        }
+
+        /* ════════════════════════════════════════
+           EMPTY STATE
+           ════════════════════════════════════════ */
+        .empty-state {
+            text-align: center;
+            padding: 48px 20px;
             color: var(--text-muted);
         }
 
-        .premium-input {
-            width: 100%;
-            padding: 14px 16px;
-            background: var(--bg-main);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            font-size: 16px;
-            color: var(--text-main);
-            outline: none;
-            transition: all 0.2s;
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
         }
 
-        .premium-input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 2px var(--accent-glow);
+        .empty-state-text {
+            font-size: 14px;
         }
 
-        .sheet-btn {
-            width: 100%;
-            padding: 16px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: 0 4px 15px var(--accent-glow);
-            transition: transform 0.1s;
-        }
-
-        .sheet-btn:active {
-            transform: scale(0.97);
-            background: #4a48d4;
-        }
-
-        [data-theme="light"] .category-chip,
-        [data-theme="light"] .product-card,
-        [data-theme="light"] .bottom-sheet,
-        [data-theme="light"] .bottom-nav,
-        [data-theme="light"] .selected-product-box,
-        [data-theme="light"] .payment-method-card {
-            border-color: var(--border-light) !important;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03) !important;
-        }
-
-        [data-theme="light"] .premium-input {
-            border-color: var(--border-input);
-            background: #f4f6f8;
-        }
-
-        [data-theme="light"] .product-card:active {
-            background: #f0f2f5;
-        }
-
-        /* Premium Glow and Glassmorphism */
-        .bottom-sheet {
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            background: rgba(28, 31, 46, 0.95);
-        }
-
-        [data-theme="light"] .bottom-sheet {
-            background: rgba(255, 255, 255, 0.95);
-        }
-
-        .product-card {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .theme-toggle-btn {
+        /* ════════════════════════════════════════
+           TOAST
+           ════════════════════════════════════════ */
+        .toast {
+            position: fixed;
+            top: calc(var(--header-h) + 12px);
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
             background: var(--bg-card);
-            border: 1px solid var(--border-light);
+            border: 1px solid var(--border);
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 500;
+            transition: transform .3s cubic-bezier(.22, .68, 0, 1);
+            white-space: nowrap;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast.success {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .toast.error {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .toast.info {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* ════════════════════════════════════════
+           PROFILE CARD
+           ════════════════════════════════════════ */
+        .profile-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .profile-avatar {
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
-            width: 36px;
-            height: 36px;
+            background: var(--accent);
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--accent-text);
+        }
+
+        .profile-name {
             font-size: 16px;
-            cursor: pointer;
-            transition: transform 0.2s;
-            color: var(--text-main);
+            font-weight: 700;
         }
 
-        .theme-toggle-btn:active {
-            transform: scale(0.9);
-        }
-
-        body {
-            transition: background-color 0.3s ease, color 0.3s ease;
+        .profile-id {
+            font-size: 12px;
+            color: var(--text-muted);
         }
     </style>
 </head>
 
 <body>
 
-    <!-- 1. HEADER -->
+    <!-- ══════════ HEADER ══════════ -->
     <header class="header">
-        <div class="header-left">
-            <img id="userAvatarWrap" class="avatar" src="" style="display:none;">
-            <div id="defaultAvatar" class="avatar">U</div>
-            <h2 class="user-name" id="userName">undefined</h2>
+        <div class="header-brand">
+            <span>⚡</span> ThunderPay
         </div>
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <div class="theme-toggle-btn" onclick="toggleTheme()" id="themeToggleIcon">☀️</div>
-            <div class="header-right" onclick="sendTopupAction()">
-                <span class="coin-icon">💰</span>
-                <span class="balance-value" id="userBalance">0</span>
-            </div>
+        <div class="header-balance" onclick="navigateTo('wallet')">
+            💰 <span id="headerBalance">0</span> <small>UZS</small>
         </div>
     </header>
 
-    <!-- 2. TITLE -->
-    <h1 class="page-title" id="pageTitle">Miqdorni tanlang</h1>
+    <!-- ══════════ CONTENT ══════════ -->
+    <div class="content">
 
-    <!-- 3. CATEGORIES -->
-    <div class="categories-scroll" id="categoriesWrapper">
-        <div class="category-chip active" id="catAll" onclick="filterCategory('All', this)">All</div>
-        <div class="category-chip" onclick="filterCategory('PUBG Mobile', this)">UC 🏷️</div>
-        <div class="category-chip" onclick="filterCategory('Mobile Legends', this)">Diamonds 💎</div>
-        <div class="category-chip" onclick="filterCategory('Roblox', this)">Robux 🎮</div>
+        <!-- PAGE: ASOSIY (CATALOG) -->
+        <div class="page active" id="page-home">
+            <h2 class="section-title" data-i18n="catalog_title">🎮 O'yinlar katalogi</h2>
+            <div class="chips" id="categoryChips"></div>
+            <div class="games-grid" id="gamesGrid"></div>
+        </div>
+
+        <!-- PAGE: HAMYON (WALLET) -->
+        <div class="page" id="page-wallet">
+            <h2 class="section-title" data-i18n="wallet_title">💳 Hamyon</h2>
+            <div class="balance-hero">
+                <div class="balance-hero-label" data-i18n="your_balance">Sizning balansingiz</div>
+                <div class="balance-hero-amount"><span id="walletBalance">0</span> <small>UZS</small></div>
+            </div>
+            <p class="section-subtitle" data-i18n="choose_amount">Summani tanlang yoki o'zingiz kiriting</p>
+            <div class="amount-grid" id="amountGrid"></div>
+            <div class="input-group">
+                <input type="number" class="input-field" id="depositInput" data-i18n-placeholder="custom_amount"
+                    placeholder="Boshqa summa (min 1 000)">
+            </div>
+            <button class="btn-primary" id="btnDeposit" data-i18n="deposit_btn" onclick="handleDeposit()">💰 Balansni
+                to'ldirish</button>
+        </div>
+
+        <!-- PAGE: TARIX (HISTORY) -->
+        <div class="page" id="page-history">
+            <h2 class="section-title" data-i18n="history_title">📦 Buyurtmalar tarixi</h2>
+            <div id="historyList"></div>
+        </div>
+
+        <!-- PAGE: SOZLAMALAR (SETTINGS) -->
+        <div class="page" id="page-settings">
+            <h2 class="section-title" data-i18n="settings_title">⚙️ Sozlamalar</h2>
+
+            <div class="profile-card">
+                <div class="profile-avatar" id="settingsAvatar">U</div>
+                <div>
+                    <div class="profile-name" id="settingsName">User</div>
+                    <div class="profile-id" id="settingsId">ID: —</div>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <div class="settings-group-title" data-i18n="language">Til</div>
+                <div class="lang-option active" id="langUz" onclick="setLang('uz')">
+                    <span class="lang-option-flag">🇺🇿</span>
+                    <span class="lang-option-name">O'zbek tili</span>
+                    <span class="lang-option-check" id="checkUz">✓</span>
+                </div>
+                <div class="lang-option" id="langRu" onclick="setLang('ru')">
+                    <span class="lang-option-flag">🇷🇺</span>
+                    <span class="lang-option-name">Русский</span>
+                    <span class="lang-option-check" id="checkRu" style="display:none">✓</span>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <div class="settings-group-title" data-i18n="about">Ilova haqida</div>
+                <div class="settings-item" onclick="showToast('ThunderPay v2.0','info')">
+                    <div class="settings-item-left">
+                        <span class="settings-item-icon">📱</span>
+                        <span class="settings-item-label" data-i18n="version">Versiya</span>
+                    </div>
+                    <span class="settings-item-value">2.0.0</span>
+                </div>
+                <div class="settings-item">
+                    <div class="settings-item-left">
+                        <span class="settings-item-icon">💬</span>
+                        <span class="settings-item-label" data-i18n="support">Qo'llab-quvvatlash</span>
+                    </div>
+                    <span class="settings-item-arrow">→</span>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- 4 & 5. PRODUCT GRID & CARDS -->
-    <main class="grid-container" id="productsGrid">
-        <div class="loading-state">Yuklanmoqda...</div>
-    </main>
-
-    <!-- 6. BOTTOM NAVIGATION -->
+    <!-- ══════════ BOTTOM NAV ══════════ -->
     <nav class="bottom-nav">
-        <div class="nav-item active">
+        <div class="nav-item active" data-page="home" onclick="navigateTo('home')">
             <span class="nav-icon">🏠</span>
-            <span id="navHome">Asosiy</span>
+            <span class="nav-label" data-i18n="nav_home">Asosiy</span>
         </div>
-        <div class="nav-item" onclick="sendTopupAction()">
-            <span class="nav-icon">👛</span>
-            <span id="navWallet">Hamyon</span>
+        <div class="nav-item" data-page="wallet" onclick="navigateTo('wallet')">
+            <span class="nav-icon">💰</span>
+            <span class="nav-label" data-i18n="nav_wallet">Hamyon</span>
         </div>
-        <div class="nav-item">
-            <span class="nav-icon">🕒</span>
-            <span id="navHistory">Tarix</span>
+        <div class="nav-item" data-page="history" onclick="navigateTo('history')">
+            <span class="nav-icon">📋</span>
+            <span class="nav-label" data-i18n="nav_history">Tarix</span>
         </div>
-        <div class="nav-item">
+        <div class="nav-item" data-page="settings" onclick="navigateTo('settings')">
             <span class="nav-icon">⚙️</span>
-            <span id="navSettings">Sozlamalar</span>
+            <span class="nav-label" data-i18n="nav_settings">Sozlamalar</span>
         </div>
     </nav>
 
-    <!-- 7. PURCHASE MODAL (BOTTOM SHEET) -->
-    <div class="bottom-sheet-overlay" id="bottomSheet" onclick="closeSheetOnBackground(event)">
-        <div class="bottom-sheet">
-            <div class="sheet-handle"></div>
-            <h3 class="sheet-header-title" id="sheetCategoryTitle">PUBG Mobile</h3>
-
-            <div class="selected-product-box">
-                <div class="sp-left">
-                    <div class="sp-icon" id="sheetIcon">💎</div>
-                    <div class="sp-title" id="sheetName">60 UC</div>
-                </div>
-                <div class="sp-price" id="sheetPrice">11 500 UZS</div>
-            </div>
-
-            <div class="input-group">
-                <label class="input-label" id="labelUserId" for="playerIdInput">User ID</label>
-                <input type="text" id="playerIdInput" class="premium-input" placeholder="ID raqamingizni kiriting"
-                    inputmode="numeric">
-            </div>
-
-            <button class="sheet-btn" id="btnConfirm" onclick="openPaymentMethods()">Tasdiqlash</button>
+    <!-- ══════════ BOTTOM SHEET (PURCHASE) ══════════ -->
+    <div class="overlay" id="overlay" onclick="closeSheet()"></div>
+    <div class="sheet" id="sheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-title" id="sheetGameName"></div>
+        <div class="sheet-price" id="sheetProductName"></div>
+        <div class="input-group">
+            <label data-i18n="player_id_label">Player ID / Game ID</label>
+            <input type="text" class="input-field" id="sheetPlayerId" data-i18n-placeholder="enter_player_id"
+                placeholder="ID raqamingizni kiriting">
         </div>
+        <button class="btn-primary" id="btnBuy" onclick="handleBuy()">⚡ Sotib olish</button>
+        <button class="btn-secondary" onclick="closeSheet()" data-i18n="cancel">Bekor qilish</button>
     </div>
 
-    <!-- 8. PAYMENT METHODS MODAL (BOTTOM SHEET) -->
-    <div class="bottom-sheet-overlay" id="paymentMethodsSheet" onclick="closeSheetOnBackground(event)">
-        <div class="bottom-sheet">
-            <div class="sheet-handle"></div>
-            <h3 class="sheet-header-title" id="titlePaymentMethod">To'lov usulini tanlang</h3>
+    <!-- ══════════ TOAST ══════════ -->
+    <div class="toast" id="toast"></div>
 
-            <div class="payment-methods-grid"
-                style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
-                <div class="payment-method-card" onclick="openPaymentDetails('Uzcard')"
-                    style="background: var(--bg-main); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; text-align: center; cursor: pointer;">
-                    <span style="font-size: 24px; display: block; margin-bottom: 8px;">💳</span>
-                    <span style="font-weight: 700; font-size: 14px;">Uzcard</span>
-                </div>
-                <div class="payment-method-card" onclick="openPaymentDetails('HUMO')"
-                    style="background: var(--bg-main); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; text-align: center; cursor: pointer;">
-                    <span style="font-size: 24px; display: block; margin-bottom: 8px;">💳</span>
-                    <span style="font-weight: 700; font-size: 14px;">HUMO</span>
-                </div>
-            </div>
-        </div>
-    </div>
+    <script>
+        /* ═══════════════════════════════════════════════
+           ThunderPay SPA — Vanilla JS
+           ═══════════════════════════════════════════════ */
 
-    <!-- 9. PAYMENT DETAILS MODAL (BOTTOM SHEET) -->
-    <div class="bottom-sheet-overlay" id="paymentDetailsSheet" onclick="closeSheetOnBackground(event)">
-        <div class="bottom-sheet">
-            <div class="sheet-handle"></div>
-            <h3 class="sheet-header-title" id="titlePaymentDetails">To'lov ma'lumotlari</h3>
+        const tg = window.Telegram?.WebApp;
 
-            <div
-                style="background: var(--bg-main); padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
-                <p id="labelCardNumber" style="color: var(--text-muted); font-size: 13px; margin: 0 0 4px 0;">Karta
-                    raqami (<span id="selectedPaymentMethod">Uzcard</span>)</p>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h2 style="margin: 0; font-size: 18px; letter-spacing: 1px; color: var(--price-color);"
-                        id="merchantCardInfo">8600 1234 5678 9012</h2>
-                    <button onclick="copyToClipboard('merchantCardInfo')" class="btn-copy"
-                        style="background: transparent; border: none; color: var(--accent); cursor: pointer; font-size: 16px;">📋
-                        Nuxsa</button>
-                </div>
-
-                <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.05); margin: 16px 0;">
-
-                <p id="labelAmount" style="color: var(--text-muted); font-size: 13px; margin: 0 0 4px 0;">O'tkazma
-                    summasi</p>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h2 style="margin: 0; font-size: 20px; font-weight: 800;" id="exactAmountToTransfer">0 UZS</h2>
-                    <button onclick="copyToClipboard('exactAmountToTransfer')" class="btn-copy"
-                        style="background: transparent; border: none; color: var(--accent); cursor: pointer; font-size: 16px;">📋
-                        Nuxsa</button>
-                </div>
-                <p id="labelWarning" style="color: #ff4757; font-size: 12px; margin: 8px 0 0 0;">⚠️ Diqqat: Summani
-                    tiyinlarigacha aniq
-                    o'tkazing, aks holda tushmaydi!</p>
-            </div>
-
-            <button class="sheet-btn" id="btnPaid" onclick="checkPaymentStatus()">To'lovni qildim ✅</button>
-            <button class="sheet-btn" id="btnCancel" onclick="closeAllSheets()"
-                style="background: transparent; box-shadow: none; border: 1px solid rgba(255,255,255,0.1); margin-top: 12px; color: var(--text-muted);">Bekor
-                qilish</button>
-        </div>
-        <!-- 10. ADMIN MODAL (BOTTOM SHEET) -->
-        <div class="bottom-sheet-overlay" id="adminSheet" onclick="closeSheetOnBackground(event)">
-            <div class="bottom-sheet">
-                <div class="sheet-handle"></div>
-                <h3 class="sheet-header-title">🔧 Admin Panel</h3>
-
-                <div style="background: var(--bg-main); padding: 16px; border-radius: 12px; margin-bottom: 20px;">
-                    <p style="color: var(--text-muted); font-size: 13px; margin: 0 0 12px 0;">Pending Payments</p>
-                    <div id="adminPaymentsList">
-                        <div class="loading-state">Loading...</div>
-                    </div>
-                </div>
-
-                <button class="sheet-btn" onclick="closeAllSheets()"
-                    style="background: transparent; box-shadow: none; border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted);">Yopish</button>
-            </div>
-        </div>
-
-        <!-- MAIN LOGIC -->
-        <script>
-            const tg = window.Telegram.WebApp;
-
-            let currentProductId = null;
-            let allProducts = [];
-
-            // App Language State
-            const urlParams = new URLSearchParams(window.location.search);
-            let currentLang = urlParams.get('lang') || 'uz';
-
-            const i18n = {
-                "uz": {
-                    "title": "Miqdorni tanlang",
-                    "all": "Barchasi",
-                    "nav_home": "Asosiy",
-                    "nav_wallet": "Hamyon",
-                    "nav_history": "Tarix",
-                    "nav_settings": "Sozlamalar",
-                    "input_label": "User ID",
-                    "input_placeholder": "ID raqamingizni kiriting",
-                    "btn_confirm": "Tasdiqlash",
-                    "payment_title": "To'lov usulini tanlang",
-                    "payment_details_title": "To'lov ma'lumotlari",
-                    "card_number": "Karta raqami",
-                    "amount": "O'tkazma summasi",
-                    "warning": "⚠️ Diqqat: Summani tiyinlarigacha aniq o'tkazing, aks holda tushmaydi!",
-                    "btn_paid": "To'lovni qildim ✅",
-                    "btn_cancel": "Bekor qilish",
-                    "modal_alert_id": "Iltimos, User ID kiriting!",
-                    "modal_alert_copy": "Nusxa olindi: ",
-                    "modal_alert_success": "To'lov qabul qilindi! Iltimos botdagi xabarni kuting.",
-                    "loading": "Yuklanmoqda...",
-                    "no_products": "Tovarlar topilmadi",
-                    "btn_copy": "📋 Nuxsa"
-                },
-                "ru": {
-                    "title": "Выберите категорию",
-                    "all": "Все",
-                    "nav_home": "Главная",
-                    "nav_wallet": "Кошелек",
-                    "nav_history": "История",
-                    "nav_settings": "Настройки",
-                    "input_label": "Ваш ID",
-                    "input_placeholder": "Введите ваш игровой ID",
-                    "btn_confirm": "Подтвердить",
-                    "payment_title": "Выберите способ оплаты",
-                    "payment_details_title": "Реквизиты для оплаты",
-                    "card_number": "Номер карты",
-                    "amount": "Сумма перевода",
-                    "warning": "⚠️ Внимание: Переведите ровно указанную сумму, иначе платеж не пройдет!",
-                    "btn_paid": "Я оплатил(а) ✅",
-                    "btn_cancel": "Отмена",
-                    "modal_alert_id": "Пожалуйста, введите ваш ID!",
-                    "modal_alert_copy": "Скопировано: ",
-                    "modal_alert_success": "Платеж принят! Пожалуйста, ожидайте сообщения в боте.",
-                    "loading": "Загрузка...",
-                    "no_products": "Товары не найдены",
-                    "btn_copy": "📋 Копия"
-                }
-            };
-
-            function applyLanguage() {
-                const lang = i18n[currentLang] || i18n['uz'];
-                document.getElementById('pageTitle').textContent = lang.title;
-                document.getElementById('catAll').textContent = lang.all;
-                document.getElementById('navHome').textContent = lang.nav_home;
-                document.getElementById('navWallet').textContent = lang.nav_wallet;
-                document.getElementById('navHistory').textContent = lang.nav_history;
-                document.getElementById('navSettings').textContent = lang.nav_settings;
-
-                document.getElementById('labelUserId').textContent = lang.input_label;
-                document.getElementById('playerIdInput').placeholder = lang.input_placeholder;
-                document.getElementById('btnConfirm').textContent = lang.btn_confirm;
-
-                document.getElementById('titlePaymentMethod').textContent = lang.payment_title;
-                document.getElementById('titlePaymentDetails').textContent = lang.payment_details_title;
-
-                document.getElementById('labelCardNumber').innerHTML = `${lang.card_number} (<span id="selectedPaymentMethod">Uzcard</span>)`;
-                document.getElementById('labelAmount').textContent = lang.amount;
-                document.getElementById('labelWarning').textContent = lang.warning;
-
-                document.getElementById('btnPaid').textContent = lang.btn_paid;
-                document.getElementById('btnCancel').textContent = lang.btn_cancel;
-
-                document.querySelectorAll('.btn-copy').forEach(btn => btn.textContent = lang.btn_copy);
+        // ─── I18N DICTIONARY ───
+        const T = {
+            uz: {
+                catalog_title: "🎮 O'yinlar katalogi",
+                wallet_title: "💳 Hamyon",
+                history_title: "📦 Buyurtmalar tarixi",
+                settings_title: "⚙️ Sozlamalar",
+                nav_home: "Asosiy",
+                nav_wallet: "Hamyon",
+                nav_history: "Tarix",
+                nav_settings: "Sozlamalar",
+                your_balance: "Sizning balansingiz",
+                choose_amount: "Summani tanlang yoki o'zingiz kiriting",
+                custom_amount: "Boshqa summa (min 1 000)",
+                deposit_btn: "💰 Balansni to'ldirish",
+                player_id_label: "Player ID / Game ID",
+                enter_player_id: "ID raqamingizni kiriting",
+                buy_btn: "⚡ Sotib olish",
+                cancel: "Bekor qilish",
+                language: "Til",
+                about: "Ilova haqida",
+                version: "Versiya",
+                support: "Qo'llab-quvvatlash",
+                no_orders: "Buyurtmalar topilmadi",
+                no_orders_desc: "Bu yerda buyurtmalaringiz ko'rsatiladi",
+                cat_all: "Barchasi",
+                cat_shooters: "Otishma",
+                cat_moba: "MOBA",
+                cat_anime: "Anime",
+                cat_other: "Boshqa",
+                deposit_success: "✅ So'rov yuborildi!",
+                deposit_min_err: "Minimal summa: 1 000 UZS",
+                enter_id_err: "Iltimos, Player ID kiriting!",
+                buy_sent: "✅ Buyurtma yuborildi!",
+                order_deposit: "Balans to'ldirish",
+                order_purchase: "Xarid",
+            },
+            ru: {
+                catalog_title: "🎮 Каталог игр",
+                wallet_title: "💳 Кошелёк",
+                history_title: "📦 История заказов",
+                settings_title: "⚙️ Настройки",
+                nav_home: "Каталог",
+                nav_wallet: "Кошелёк",
+                nav_history: "История",
+                nav_settings: "Настройки",
+                your_balance: "Ваш баланс",
+                choose_amount: "Выберите сумму или введите свою",
+                custom_amount: "Другая сумма (мин. 1 000)",
+                deposit_btn: "💰 Пополнить баланс",
+                player_id_label: "Player ID / Game ID",
+                enter_player_id: "Введите ваш игровой ID",
+                buy_btn: "⚡ Купить",
+                cancel: "Отмена",
+                language: "Язык",
+                about: "О приложении",
+                version: "Версия",
+                support: "Поддержка",
+                no_orders: "Заказов пока нет",
+                no_orders_desc: "Здесь будут отображаться ваши заказы",
+                cat_all: "Все",
+                cat_shooters: "Шутеры",
+                cat_moba: "MOBA",
+                cat_anime: "Аниме",
+                cat_other: "Другое",
+                deposit_success: "✅ Заявка отправлена!",
+                deposit_min_err: "Минимальная сумма: 1 000 UZS",
+                enter_id_err: "Пожалуйста, введите Player ID!",
+                buy_sent: "✅ Заказ отправлен!",
+                order_deposit: "Пополнение",
+                order_purchase: "Покупка",
             }
+        };
 
-            // API Endpoints
-            const API_BASE = window.location.origin;
+        let currentLang = 'uz';
+        let currentPage = 'home';
+        let currentCategory = 'all';
+        let selectedGame = null;
+        let selectedProduct = null;
+        let userBalance = 0;
 
-            document.addEventListener("DOMContentLoaded", async () => {
-                // Apply language first
-                applyLanguage();
+        // ─── GAME DATA (MOCK) ───
+        const GAMES = [
+            {
+                id: 'pubg', name: 'PUBG Mobile', emoji: '🔫', cat: 'shooters',
+                color: '#f59e0b', img: 'images/pubg_uc_1772702840618.png',
+                products: [
+                    { sku: 'pubg_60', name: '60 UC', price: 13500 },
+                    { sku: 'pubg_325', name: '325 UC', price: 65000 },
+                    { sku: 'pubg_660', name: '660 UC', price: 130000 },
+                    { sku: 'pubg_1800', name: '1800 UC', price: 340000 },
+                ]
+            },
+            {
+                id: 'mlbb', name: 'Mobile Legends', emoji: '⚔️', cat: 'moba',
+                color: '#3b82f6', img: 'images/mlbb_diamond_1772702858620.png',
+                products: [
+                    { sku: 'mlbb_86', name: '86 Diamonds', price: 14000 },
+                    { sku: 'mlbb_172', name: '172 Diamonds', price: 27000 },
+                    { sku: 'mlbb_344', name: '344 Diamonds', price: 53000 },
+                    { sku: 'mlbb_706', name: '706 Diamonds', price: 108000 },
+                ]
+            },
+            {
+                id: 'freefire', name: 'Free Fire', emoji: '🔥', cat: 'shooters',
+                color: '#ef4444',
+                products: [
+                    { sku: 'ff_100', name: '100 Diamonds', price: 12000 },
+                    { sku: 'ff_530', name: '530 Diamonds', price: 56000 },
+                    { sku: 'ff_1060', name: '1060 Diamonds', price: 108000 },
+                ]
+            },
+            {
+                id: 'genshin', name: 'Genshin Impact', emoji: '🌟', cat: 'anime',
+                color: '#8b5cf6',
+                products: [
+                    { sku: 'gi_60', name: '60 Crystals', price: 15000 },
+                    { sku: 'gi_300', name: '300 Crystals', price: 68000 },
+                    { sku: 'gi_welkin', name: 'Welkin Moon', price: 55000 },
+                ]
+            },
+            {
+                id: 'roblox', name: 'Roblox', emoji: '🧊', cat: 'other',
+                color: '#ec4899', img: 'images/roblox_robux_1772702877156.png',
+                products: [
+                    { sku: 'rbx_400', name: '400 Robux', price: 52000 },
+                    { sku: 'rbx_800', name: '800 Robux', price: 98000 },
+                    { sku: 'rbx_1700', name: '1700 Robux', price: 195000 },
+                ]
+            },
+            {
+                id: 'codm', name: 'Call of Duty', emoji: '💣', cat: 'shooters',
+                color: '#64748b',
+                products: [
+                    { sku: 'codm_80', name: '80 CP', price: 12000 },
+                    { sku: 'codm_400', name: '400 CP', price: 52000 },
+                    { sku: 'codm_bp', name: 'Battle Pass', price: 95000 },
+                ]
+            },
+            {
+                id: 'standoff2', name: 'Standoff 2', emoji: '🎯', cat: 'shooters',
+                color: '#06b6d4',
+                products: [
+                    { sku: 'so2_150', name: '150 Gold', price: 15000 },
+                    { sku: 'so2_500', name: '500 Gold', price: 45000 },
+                    { sku: 'so2_1500', name: '1500 Gold', price: 125000 },
+                ]
+            },
+            {
+                id: 'clashroyale', name: 'Clash Royale', emoji: '👑', cat: 'other',
+                color: '#22c55e',
+                products: [
+                    { sku: 'cr_80', name: '80 Gems', price: 12000 },
+                    { sku: 'cr_500', name: '500 Gems', price: 55000 },
+                    { sku: 'cr_pass', name: 'Pass Royale', price: 55000 },
+                ]
+            },
+            {
+                id: 'brawlstars', name: 'Brawl Stars', emoji: '💥', cat: 'other',
+                color: '#a855f7',
+                products: [
+                    { sku: 'bs_30', name: '30 Gems', price: 10000 },
+                    { sku: 'bs_170', name: '170 Gems', price: 45000 },
+                    { sku: 'bs_pass', name: 'Brawl Pass', price: 85000 },
+                ]
+            },
+            {
+                id: 'hok', name: 'Honor of Kings', emoji: '🏆', cat: 'moba',
+                color: '#f97316',
+                products: [
+                    { sku: 'hok_60', name: '60 Tokens', price: 13000 },
+                    { sku: 'hok_300', name: '300 Tokens', price: 58000 },
+                    { sku: 'hok_600', name: '600 Tokens', price: 110000 },
+                ]
+            },
+            {
+                id: 'tgstars', name: 'Telegram Stars', emoji: '⭐', cat: 'other',
+                color: '#eab308',
+                products: [
+                    { sku: 'tg_50', name: '50 Stars', price: 5500 },
+                    { sku: 'tg_100', name: '100 Stars', price: 10500 },
+                    { sku: 'tg_250', name: '250 Stars', price: 25000 },
+                ]
+            },
+        ];
 
-                // WebApp Init
+        // ─── CATEGORIES ───
+        const CATEGORIES = [
+            { id: 'all', i18n: 'cat_all' },
+            { id: 'shooters', i18n: 'cat_shooters' },
+            { id: 'moba', i18n: 'cat_moba' },
+            { id: 'anime', i18n: 'cat_anime' },
+            { id: 'other', i18n: 'cat_other' },
+        ];
+
+        // ─── DEPOSIT AMOUNTS ───
+        const DEPOSIT_AMOUNTS = [5000, 10000, 25000, 50000, 100000, 200000];
+
+        // ─── MOCK HISTORY ───
+        const mockHistory = [];
+
+        // ═══════════════════════════════════════════════
+        // INIT
+        // ═══════════════════════════════════════════════
+        function init() {
+            if (tg) {
                 tg.expand();
                 tg.ready();
                 tg.disableClosingConfirmation();
-
-                // Set background color of telegram header to match our dark theme
                 tg.setHeaderColor('#0b0f19');
                 tg.setBackgroundColor('#0b0f19');
+            }
 
-                // Setup Header User Info & Auth
-                let is_admin = false;
+            // Get user info
+            const user = tg?.initDataUnsafe?.user;
+            if (user) {
+                const name = user.first_name || 'User';
+                document.getElementById('settingsName').textContent = name;
+                document.getElementById('settingsId').textContent = `ID: ${user.id}`;
+                document.getElementById('settingsAvatar').textContent = name.charAt(0).toUpperCase();
+            }
 
-                const initData = tg?.initData || 'test_mode=1';
-                try {
-                    const authRes = await fetch(`${API_BASE}/api/auth`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ initData })
-                    });
-                    const authData = await authRes.json();
-                    if (authData.ok) {
-                        is_admin = authData.is_admin;
-                        // Assuming you want to update balance here too: 
-                        // document.getElementById('userBalance').textContent = new Intl.NumberFormat('ru-RU').format(authData.balance);
-                    }
-                } catch (e) {
-                    console.error("Auth error:", e);
-                }
+            // Read lang from URL
+            const params = new URLSearchParams(window.location.search);
+            const urlLang = params.get('lang');
+            if (urlLang === 'ru' || urlLang === 'uz') currentLang = urlLang;
 
-                if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                    const user = tg.initDataUnsafe.user;
-                    const displayName = user.username || user.first_name || 'undefined';
-                    document.getElementById('userName').textContent = displayName;
+            renderCategoryChips();
+            renderGames();
+            renderAmountGrid();
+            renderHistory();
+            applyLang();
+        }
 
-                    if (displayName !== 'undefined') {
-                        document.getElementById('defaultAvatar').textContent = displayName.charAt(0).toUpperCase();
-                    }
+        // ═══════════════════════════════════════════════
+        // NAVIGATION
+        // ═══════════════════════════════════════════════
+        function navigateTo(page) {
+            currentPage = page;
 
-                    if (user.photo_url) {
-                        const img = document.getElementById('userAvatarWrap');
-                        img.src = user.photo_url;
-                        img.style.display = 'flex';
-                        document.getElementById('defaultAvatar').style.display = 'none';
-                    }
-                }
-
-                // Add Admin button dynamically if user is admin
-                if (is_admin) {
-                    const nav = document.querySelector('.bottom-nav');
-                    const adminHtml = `
-                    <div class="nav-btn" onclick="openAdminPanel()">
-                        <span class="nav-icon" style="color:#ff9f43">🔧</span>
-                        <span class="nav-label" id="navAdmin">Admin</span>
-                    </div>`;
-                    nav.insertAdjacentHTML('beforeend', adminHtml);
-                }
-
-                // Sync with Telegram Theme if available
-                if (tg.colorScheme === 'light') toggleTheme(true, 'light');
-                else toggleTheme(true, 'dark');
-
-                // Fetch Data
-                fetchCatalog();
+            // Update nav
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.toggle('active', item.dataset.page === page);
             });
 
-            async function openAdminPanel() {
-                if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-                closeAllSheets();
-
-                const overlay = document.getElementById('adminSheet');
-                overlay.classList.add('active');
-
-                try {
-                    const res = await fetch(`${API_BASE}/api/admin/payments`);
-                    const data = await res.json();
-                    const list = document.getElementById('adminPaymentsList');
-
-                    if (data.ok && data.data.length > 0) {
-                        list.innerHTML = data.data.map(p => `
-                            <div style="background:var(--bg-card); padding:10px; border-radius:8px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
-                                <div>
-                                    <strong style="font-size:14px">${p.name || 'User'}</strong><br>
-                                    <small style="color:var(--text-muted)">${new Intl.NumberFormat('ru-RU').format(p.locked_amount)} UZS</small>
-                                </div>
-                                <button onclick="approvePayment(${p.id}, this)" style="background:var(--price-color); border:none; color:white; padding:6px 12px; border-radius:6px; font-weight:bold;">✅</button>
-                            </div>
-                        `).join('');
-                    } else {
-                        list.innerHTML = `<div class="loading-state">Ma'lumot topilmadi.</div>`;
-                    }
-                } catch (e) {
-                    console.error(e);
-                    document.getElementById('adminPaymentsList').innerHTML = `<div class="loading-state">Xatolik yuz berdi.</div>`;
-                }
+            // Update pages
+            document.querySelectorAll('.page').forEach(p => {
+                p.classList.remove('active');
+            });
+            const target = document.getElementById(`page-${page}`);
+            if (target) {
+                target.classList.add('active');
             }
 
-            async function approvePayment(id, btnElement) {
-                btnElement.disabled = true;
-                btnElement.textContent = "⏳";
-                try {
-                    const res = await fetch(`${API_BASE}/api/admin/approve`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ payment_id: id })
-                    });
-                    const data = await res.json();
-                    if (data.ok) {
-                        tg.showAlert(data.message);
-                        openAdminPanel(); // Refresh list
-                    } else {
-                        tg.showAlert(data.error);
-                        btnElement.disabled = false;
-                        btnElement.textContent = "✅";
-                    }
-                } catch (e) {
-                    tg.showAlert("API Error");
-                    btnElement.disabled = false;
-                    btnElement.textContent = "✅";
-                }
+            // Refresh data on certain pages
+            if (page === 'wallet') updateBalanceDisplay();
+            if (page === 'history') renderHistory();
+
+            // Haptic
+            if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+        }
+
+        // ═══════════════════════════════════════════════
+        // CATEGORY CHIPS
+        // ═══════════════════════════════════════════════
+        function renderCategoryChips() {
+            const el = document.getElementById('categoryChips');
+            el.innerHTML = CATEGORIES.map(c =>
+                `<div class="chip ${c.id === currentCategory ? 'active' : ''}" data-cat="${c.id}" data-i18n="${c.i18n}" onclick="filterCategory('${c.id}', this)">${t(c.i18n)}</div>`
+            ).join('');
+        }
+
+        function filterCategory(cat, chipEl) {
+            currentCategory = cat;
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            chipEl.classList.add('active');
+            renderGames();
+            if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+        }
+
+        // ═══════════════════════════════════════════════
+        // GAMES GRID
+        // ═══════════════════════════════════════════════
+        function renderGames() {
+            const grid = document.getElementById('gamesGrid');
+            const filtered = currentCategory === 'all'
+                ? GAMES
+                : GAMES.filter(g => g.cat === currentCategory);
+
+            grid.innerHTML = filtered.map(game => {
+                const visual = game.img
+                    ? `<img src="${game.img}" alt="${game.name}">`
+                    : `<div class="game-card-emoji">${game.emoji}</div>`;
+
+                return `
+        <div class="game-card" onclick="openGameSheet('${game.id}')">
+            <div class="game-card-glow" style="background:${game.color}"></div>
+            ${visual}
+            <div class="game-card-name">${game.name}</div>
+            <div class="game-card-tag">${game.products.length} ${t(currentLang === 'uz' ? 'cat_other' : 'cat_other') ? 'tovar' : 'товар'}</div>
+        </div>`;
+            }).join('');
+
+            // Fix the tag text properly
+            grid.querySelectorAll('.game-card-tag').forEach((tag, i) => {
+                const game = filtered[i];
+                if (game) tag.textContent = `${game.products.length} ${currentLang === 'uz' ? 'tovar' : 'товаров'}`;
+            });
+        }
+
+        // ═══════════════════════════════════════════════
+        // GAME BOTTOM SHEET
+        // ═══════════════════════════════════════════════
+        function openGameSheet(gameId) {
+            const game = GAMES.find(g => g.id === gameId);
+            if (!game) return;
+            selectedGame = game;
+
+            // Show the first product by default; user can pick
+            const sheetContent = document.getElementById('sheet');
+            document.getElementById('sheetGameName').textContent = game.name;
+
+            // Build product list inside sheet
+            let productsHtml = game.products.map(p => {
+                const price = new Intl.NumberFormat('ru-RU').format(p.price);
+                return `<div class="settings-item" onclick="selectProduct('${p.sku}')" style="margin-bottom:6px">
+            <div class="settings-item-left">
+                <span class="settings-item-icon">${game.emoji}</span>
+                <span class="settings-item-label">${p.name}</span>
+            </div>
+            <span class="settings-item-value" style="color:var(--accent);font-weight:700">${price} UZS</span>
+        </div>`;
+            }).join('');
+
+            document.getElementById('sheetProductName').innerHTML = productsHtml;
+            document.getElementById('sheetPlayerId').value = '';
+            document.getElementById('btnBuy').style.display = 'none';
+            document.getElementById('sheetPlayerId').parentElement.style.display = 'none';
+
+            openSheetUI();
+            if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+        }
+
+        function selectProduct(sku) {
+            const game = selectedGame;
+            if (!game) return;
+            selectedProduct = game.products.find(p => p.sku === sku);
+            if (!selectedProduct) return;
+
+            const price = new Intl.NumberFormat('ru-RU').format(selectedProduct.price);
+            document.getElementById('sheetGameName').textContent = `${game.name} — ${selectedProduct.name}`;
+            document.getElementById('sheetProductName').innerHTML = `<div style="font-size:22px;font-weight:800;color:var(--accent)">${price} UZS</div>`;
+
+            document.getElementById('sheetPlayerId').parentElement.style.display = 'block';
+            document.getElementById('btnBuy').style.display = 'block';
+            document.getElementById('btnBuy').textContent = currentLang === 'uz' ? '⚡ Sotib olish' : '⚡ Купить';
+
+            if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+        }
+
+        function handleBuy() {
+            const playerId = document.getElementById('sheetPlayerId').value.trim();
+            if (!playerId) {
+                showToast(t('enter_id_err'), 'error');
+                if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
+                return;
             }
 
-            function toggleTheme(force = false, themeName = '') {
-                const root = document.documentElement;
-                const btn = document.getElementById('themeToggleIcon');
-                let current = root.getAttribute('data-theme') || 'dark';
-                let next = force ? themeName : (current === 'dark' ? 'light' : 'dark');
+            const data = {
+                action: 'buy',
+                product_id: selectedProduct.sku,
+                player_id: playerId
+            };
 
-                root.setAttribute('data-theme', next);
-                if (next === 'light') {
-                    btn.textContent = '🌙';
-                    tg.setHeaderColor('#f4f6f8');
-                    tg.setBackgroundColor('#f4f6f8');
-                } else {
-                    btn.textContent = '☀️';
-                    tg.setHeaderColor('#0b0f19');
-                    tg.setBackgroundColor('#0b0f19');
-                }
-                if (tg.HapticFeedback && !force) tg.HapticFeedback.impactOccurred('light');
+            if (tg?.sendData) {
+                tg.sendData(JSON.stringify(data));
             }
 
-            async function fetchCatalog() {
-                try {
-                    const response = await fetch(`${API_BASE}/api/catalog`);
-                    if (!response.ok) throw new Error('API Error');
-                    const data = await response.json();
+            // Add to local history
+            mockHistory.unshift({
+                type: 'purchase',
+                name: `${selectedGame.name} — ${selectedProduct.name}`,
+                amount: selectedProduct.price,
+                date: new Date().toLocaleDateString('ru-RU'),
+                status: 'pending',
+                emoji: selectedGame.emoji
+            });
 
-                    if (data.status === 'success') {
-                        allProducts = data.data;
-                        renderProducts(allProducts);
-                    } else {
-                        renderMockDataFallback("Failed to load");
-                    }
-                } catch (error) {
-                    console.error("Error fetching catalog:", error);
-                    renderMockDataFallback(error);
-                }
+            closeSheet();
+            showToast(t('buy_sent'), 'success');
+            if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+        }
+
+        // ═══════════════════════════════════════════════
+        // DEPOSIT (WALLET)
+        // ═══════════════════════════════════════════════
+        function renderAmountGrid() {
+            const grid = document.getElementById('amountGrid');
+            grid.innerHTML = DEPOSIT_AMOUNTS.map(a =>
+                `<button class="amount-btn" onclick="selectAmount(this, ${a})">${new Intl.NumberFormat('ru-RU').format(a)}</button>`
+            ).join('');
+        }
+
+        function selectAmount(btn, amount) {
+            document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            document.getElementById('depositInput').value = amount;
+            if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+        }
+
+        function handleDeposit() {
+            const amount = parseInt(document.getElementById('depositInput').value);
+            if (!amount || amount < 1000) {
+                showToast(t('deposit_min_err'), 'error');
+                if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
+                return;
             }
 
-            function renderMockDataFallback(err) {
-                allProducts = [
-                    { id: "pubg_60", category: "PUBG Mobile", name: "60 UC", price: 11500, icon: "images/pubg_uc_1772702840618.png", isImage: true },
-                    { id: "pubg_325", category: "PUBG Mobile", name: "325 UC", price: 58000, icon: "images/pubg_uc_1772702840618.png", isImage: true },
-                    { id: "pubg_660", category: "PUBG Mobile", name: "660 UC", price: 115000, icon: "images/pubg_uc_1772702840618.png", isImage: true },
-                    { id: "mlbb_86", category: "Mobile Legends", name: "86 💎", price: 16000, icon: "images/mlbb_diamond_1772702858620.png", isImage: true },
-                    { id: "roblox_80", category: "Roblox", name: "80 R$", price: 18000, icon: "images/roblox_robux_1772702877156.png", isImage: true }
-                ];
-                renderProducts(allProducts);
+            const data = { action: 'deposit', amount: amount };
+
+            if (tg?.sendData) {
+                tg.sendData(JSON.stringify(data));
             }
 
-            function renderProducts(products) {
-                const grid = document.getElementById('productsGrid');
-                grid.innerHTML = '';
+            // Add to local history
+            mockHistory.unshift({
+                type: 'deposit',
+                name: t('order_deposit'),
+                amount: amount,
+                date: new Date().toLocaleDateString('ru-RU'),
+                status: 'pending',
+                emoji: '💳'
+            });
 
-                if (products.length === 0) {
-                    grid.innerHTML = '<div class="loading-state">' + i18n[currentLang].no_products + '</div>';
-                    return;
-                }
+            showToast(t('deposit_success'), 'success');
+            if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+        }
 
-                products.forEach(p => {
-                    const priceFormatted = new Intl.NumberFormat('ru-RU').format(p.price);
-                    const card = document.createElement('div');
-                    card.className = 'product-card';
+        function updateBalanceDisplay() {
+            document.getElementById('headerBalance').textContent = new Intl.NumberFormat('ru-RU').format(userBalance);
+            document.getElementById('walletBalance').textContent = new Intl.NumberFormat('ru-RU').format(userBalance);
+        }
 
-                    // API Fallback Logic for Images
-                    if (!p.isImage && !p.icon) {
-                        if (p.category === 'PUBG Mobile' || p.category === 'PUBG') {
-                            p.icon = "images/pubg_uc_1772702840618.png"; p.isImage = true;
-                        } else if (p.category === 'Mobile Legends' || p.category === 'MLBB') {
-                            p.icon = "images/mlbb_diamond_1772702858620.png"; p.isImage = true;
-                        } else if (p.category === 'Roblox' || p.category === 'ROBLOX') {
-                            p.icon = "images/roblox_robux_1772702877156.png"; p.isImage = true;
-                        }
-                    }
+        // ═══════════════════════════════════════════════
+        // HISTORY
+        // ═══════════════════════════════════════════════
+        function renderHistory() {
+            const el = document.getElementById('historyList');
 
-                    let iconHtml = p.isImage ? `<img src="${p.icon}" style="width:40px;height:40px;object-fit:contain;filter:drop-shadow(0 2px 5px rgba(0,0,0,0.4));">` : `<div class="card-icon" style="font-size:24px;">${p.icon || '💳'}</div>`;
-
-                    card.onclick = () => openBottomSheet(p.buyer_sku_code, p.category, p.product_name, p.sell_price, p.icon, p.isImage);
-
-                    card.innerHTML = `
-                    ${iconHtml}
-                    <div class="card-info">
-                        <h4 class="card-title">${p.product_name}</h4>
-                        <p class="card-price">${priceFormatted} UZS</p>
-                    </div>
-                `;
-                    grid.appendChild(card);
-                });
+            if (mockHistory.length === 0) {
+                el.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">📭</div>
+                <div class="empty-state-text" data-i18n="no_orders">${t('no_orders')}</div>
+                <div style="color:var(--text-muted);font-size:12px;margin-top:4px" data-i18n="no_orders_desc">${t('no_orders_desc')}</div>
+            </div>`;
+                return;
             }
 
-            function filterCategory(category, element) {
-                if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+            el.innerHTML = mockHistory.map(h => {
+                const statusClass = h.status === 'success' ? 'status-success' : h.status === 'failed' ? 'status-failed' : 'status-pending';
+                const statusText = h.status === 'success' ? '✓' : h.status === 'failed' ? '✗' : '⏳';
+                const amountClass = h.type === 'deposit' ? 'credit' : 'debit';
+                const sign = h.type === 'deposit' ? '+' : '-';
 
-                document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
-                element.classList.add('active');
+                return `
+        <div class="history-item">
+            <div class="history-icon" style="background:var(--glass)">${h.emoji}</div>
+            <div class="history-info">
+                <div class="history-name">${h.name}</div>
+                <div class="history-date">${h.date} <span class="status-badge ${statusClass}">${statusText}</span></div>
+            </div>
+            <div class="history-amount ${amountClass}">${sign}${new Intl.NumberFormat('ru-RU').format(h.amount)}</div>
+        </div>`;
+            }).join('');
+        }
 
-                if (category === 'All') {
-                    renderProducts(allProducts);
-                } else {
-                    const filtered = allProducts.filter(p => {
-                        if (category === 'PUBG Mobile') return p.category === 'PUBG';
-                        if (category === 'Mobile Legends') return p.category === 'MLBB';
-                        if (category === 'Roblox') return p.category === 'ROBLOX';
-                        return p.category === category;
-                    });
-                    renderProducts(filtered);
-                }
-            }
+        // ═══════════════════════════════════════════════
+        // I18N
+        // ═══════════════════════════════════════════════
+        function t(key) {
+            return T[currentLang]?.[key] || T['uz'][key] || key;
+        }
 
-            function sendTopupAction() {
-                if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-                const data = JSON.stringify({ action: 'topup' });
-                tg.sendData(data);
-            }
+        function setLang(lang) {
+            currentLang = lang;
 
-            // Bottom Sheet Logic
-            function openBottomSheet(productId, categoryName, productName, productPrice, iconId, isImg = false) {
-                currentProductId = productId;
-                const priceFormatted = new Intl.NumberFormat('ru-RU').format(productPrice);
+            // Update UI selection
+            document.getElementById('langUz').classList.toggle('active', lang === 'uz');
+            document.getElementById('langRu').classList.toggle('active', lang === 'ru');
+            document.getElementById('checkUz').style.display = lang === 'uz' ? '' : 'none';
+            document.getElementById('checkRu').style.display = lang === 'ru' ? '' : 'none';
 
-                document.getElementById('sheetCategoryTitle').textContent = categoryName;
-                document.getElementById('sheetName').textContent = productName;
-                document.getElementById('sheetPrice').textContent = `${priceFormatted} UZS`;
+            applyLang();
+            renderCategoryChips();
+            renderGames();
+            renderHistory();
 
-                const sheetIconBox = document.getElementById('sheetIcon');
-                if (isImg) {
-                    sheetIconBox.innerHTML = `<img src="${iconId}" style="width:50px;height:50px;object-fit:contain;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.3));">`;
-                } else {
-                    sheetIconBox.textContent = iconId || '💳';
-                }
+            if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+        }
 
-                document.getElementById('playerIdInput').value = '';
+        function applyLang() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                const val = t(key);
+                if (val) el.textContent = val;
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                const val = t(key);
+                if (val) el.placeholder = val;
+            });
+        }
 
-                const overlay = document.getElementById('bottomSheet');
-                overlay.classList.add('active');
+        // ═══════════════════════════════════════════════
+        // SHEET HELPERS
+        // ═══════════════════════════════════════════════
+        function openSheetUI() {
+            document.getElementById('overlay').classList.add('show');
+            document.getElementById('sheet').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
 
-                if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
-            }
+        function closeSheet() {
+            document.getElementById('overlay').classList.remove('show');
+            document.getElementById('sheet').classList.remove('show');
+            document.body.style.overflow = '';
+            selectedProduct = null;
+        }
 
-            function closeBottomSheet() {
-                document.getElementById('bottomSheet').classList.remove('active');
-                // Do not clear ID yet, user might come back back
-            }
+        // Swipe to close
+        let sheetStartY = 0;
+        document.getElementById('sheet')?.addEventListener('touchstart', e => {
+            sheetStartY = e.touches[0].clientY;
+        }, { passive: true });
+        document.getElementById('sheet')?.addEventListener('touchmove', e => {
+            if (e.touches[0].clientY - sheetStartY > 60) closeSheet();
+        }, { passive: true });
 
-            function closeAllSheets() {
-                document.querySelectorAll('.bottom-sheet-overlay').forEach(el => el.classList.remove('active'));
-                currentProductId = null;
-                pendingPaymentAmount = 0;
-            }
+        // ═══════════════════════════════════════════════
+        // TOAST
+        // ═══════════════════════════════════════════════
+        function showToast(msg, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.className = `toast ${type} show`;
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
 
-            function closeSheetOnBackground(e) {
-                if (e.target.classList.contains('bottom-sheet-overlay')) {
-                    e.target.classList.remove('active');
-                }
-            }
+        // ═══════════════════════════════════════════════
+        // START
+        // ═══════════════════════════════════════════════
+        init();
+    </script>
 
-            let pendingPaymentAmount = 0;
-
-            function openPaymentMethods() {
-                const playerId = document.getElementById('playerIdInput').value.trim();
-                if (!playerId) {
-                    if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
-                    tg.showAlert(i18n[currentLang].modal_alert_id);
-                    return;
-                }
-
-                if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-
-                // Switch from Bottom Sheet to Payment Methods
-                document.getElementById('bottomSheet').classList.remove('active');
-                document.getElementById('paymentMethodsSheet').classList.add('active');
-            }
-
-            function openPaymentDetails(method) {
-                if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-
-                document.getElementById('paymentMethodsSheet').classList.remove('active');
-                document.getElementById('selectedPaymentMethod').textContent = method;
-
-                // Generate exact P2P amount based on price + random cents
-                const basePrice = parseInt(document.getElementById('sheetPrice').textContent.replace(/\D/g, ''));
-                const randomAdd = Math.floor(Math.random() * 99) + 1;
-                pendingPaymentAmount = basePrice + randomAdd;
-
-                const priceFormatted = new Intl.NumberFormat('ru-RU').format(pendingPaymentAmount);
-                document.getElementById('exactAmountToTransfer').textContent = `${priceFormatted} UZS`;
-                document.getElementById('exactAmountToTransfer').dataset.raw = pendingPaymentAmount;
-
-                // Mock card numbers based on Method
-                if (method === 'HUMO') {
-                    document.getElementById('merchantCardInfo').textContent = "9860 1234 5678 9012";
-                } else {
-                    document.getElementById('merchantCardInfo').textContent = "8600 1234 5678 9012";
-                }
-
-                document.getElementById('paymentDetailsSheet').classList.add('active');
-            }
-
-            function copyToClipboard(elementId) {
-                if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
-                const el = document.getElementById(elementId);
-                const textToCopy = el.dataset.raw ? el.dataset.raw : el.textContent.replace(/\s+/g, '');
-
-                navigator.clipboard.writeText(textToCopy).then(() => {
-                    tg.showAlert(i18n[currentLang].modal_alert_copy + textToCopy);
-                }).catch(err => {
-                    console.error('Copy failure', err);
-                });
-            }
-
-            function checkPaymentStatus() {
-                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-
-                const playerId = document.getElementById('playerIdInput').value.trim();
-                const data = JSON.stringify({
-                    action: 'buy',
-                    product_id: currentProductId,
-                    player_id: playerId,
-                    paid_amount: pendingPaymentAmount
-                });
-
-                // Send to Telegram Bot letting it know user claims they paid
-                tg.sendData(data);
-
-                tg.showAlert(i18n[currentLang].modal_alert_success);
-                closeAllSheets();
-            }
-        </script>
 </body>
 
 </html>

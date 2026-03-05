@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 router = Router()
 
-ADMIN_ID = os.getenv("ADMIN_ID")
+ADMIN_ID = os.getenv("ADMIN_ID", "7165323599")
 
 @router.message(Command("approve_pay"))
 async def cmd_approve_pay(message: types.Message, command: CommandObject):

@@ -15,7 +15,7 @@ class Config:
     
     # Telegram Bot Token
     BOT_TOKEN: str = os.getenv("BOT_TOKEN", "")
-    WEBAPP_URL: str = os.getenv("WEBAPP_URL", "https://saterlix.github.io/Digi_bot")
+    WEBAPP_URL: str = os.getenv("WEBAPP_URL", "https://thunderpay-huhhuku-7744s-projects.vercel.app")
     
     # Pricing Configuration
     EXCHANGE_RATE: float = float(os.getenv("EXCHANGE_RATE", "0.92"))

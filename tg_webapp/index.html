@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Game Store</title>
+    <!-- Подключение скрипта Telegram Web App -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="header">
+        <h1>Привет, <span id="user-name">Игрок</span>!</h1>
+        <p>Выбери валюту для покупки</p>
+    </header>
+
+    <div class="categories-scroll-wrapper">
+        <div class="categories" id="categories-container">
+            <!-- Категории генерируются через JS -->
+        </div>
+    </div>
+
+    <main class="products-grid" id="products-grid">
+        <!-- Карточки генерируются через JS -->
+    </main>
+
+    <!-- Overlay для модального окна -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Всплывающее меню (Bottom Sheet) -->
+    <div class="bottom-sheet" id="bottom-sheet">
+        <div class="sheet-indicator"></div>
+        <div class="sheet-content">
+            <h2 id="sheet-product-name">Название товара</h2>
+            <p class="sheet-price" id="sheet-product-price">Цена</p>
+
+            <div class="input-group">
+                <label for="player-id">Player ID</label>
+                <input type="text" id="player-id" placeholder="Введите ваш Player ID" autocomplete="off">
+            </div>
+
+            <button class="main-button" id="confirm-btn">Подтвердить покупку</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

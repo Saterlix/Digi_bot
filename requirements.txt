@@ -1,7 +1,4 @@
-
 fastapi
-uvicorn
-aiogram
-asyncpg
+aiosqlite
+httpx
 python-dotenv
-requests

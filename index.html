@@ -11,8 +11,7 @@
 
     <style>
         /* 
-         Buypin Clone Theme - Premium Dark
-         We are hardcoding the dark theme as gamestop relies on dark UX
+         Premium Dynamic Theme
         */
         :root {
             --bg-main: #0b0f19;
@@ -23,10 +22,24 @@
             --text-main: #ffffff;
             --text-muted: #8e93a6;
             --price-color: #00d2ff;
-            /* Cyan pop */
+            --border-light: rgba(255, 255, 255, 0.05);
+            --border-input: rgba(255, 255, 255, 0.08);
 
             --border-radius: 16px;
             --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        [data-theme="light"] {
+            --bg-main: #f4f6f8;
+            --bg-card: #ffffff;
+            --bg-nav: #ffffff;
+            --accent: #5e5ce6;
+            --accent-glow: rgba(94, 92, 230, 0.2);
+            --text-main: #1a1b2e;
+            --text-muted: #6b7280;
+            --price-color: #0088cc;
+            --border-light: rgba(0, 0, 0, 0.06);
+            --border-input: rgba(0, 0, 0, 0.1);
         }
 
         * {
@@ -404,6 +417,63 @@
             transform: scale(0.97);
             background: #4a48d4;
         }
+
+        [data-theme="light"] .category-chip,
+        [data-theme="light"] .product-card,
+        [data-theme="light"] .bottom-sheet,
+        [data-theme="light"] .bottom-nav,
+        [data-theme="light"] .selected-product-box,
+        [data-theme="light"] .payment-method-card {
+            border-color: var(--border-light) !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03) !important;
+        }
+
+        [data-theme="light"] .premium-input {
+            border-color: var(--border-input);
+            background: #f4f6f8;
+        }
+
+        [data-theme="light"] .product-card:active {
+            background: #f0f2f5;
+        }
+
+        /* Premium Glow and Glassmorphism */
+        .bottom-sheet {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background: rgba(28, 31, 46, 0.95);
+        }
+
+        [data-theme="light"] .bottom-sheet {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .product-card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .theme-toggle-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            color: var(--text-main);
+        }
+
+        .theme-toggle-btn:active {
+            transform: scale(0.9);
+        }
+
+        body {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
     </style>
 </head>
 
@@ -416,18 +486,21 @@
             <div id="defaultAvatar" class="avatar">U</div>
             <h2 class="user-name" id="userName">undefined</h2>
         </div>
-        <div class="header-right" onclick="sendTopupAction()">
-            <span class="coin-icon">💰</span>
-            <span class="balance-value" id="userBalance">0</span>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <div class="theme-toggle-btn" onclick="toggleTheme()" id="themeToggleIcon">☀️</div>
+            <div class="header-right" onclick="sendTopupAction()">
+                <span class="coin-icon">💰</span>
+                <span class="balance-value" id="userBalance">0</span>
+            </div>
         </div>
     </header>
 
     <!-- 2. TITLE -->
-    <h1 class="page-title">Miqdorni tanlang</h1>
+    <h1 class="page-title" id="pageTitle">Miqdorni tanlang</h1>
 
     <!-- 3. CATEGORIES -->
     <div class="categories-scroll" id="categoriesWrapper">
-        <div class="category-chip active" onclick="filterCategory('All', this)">All</div>
+        <div class="category-chip active" id="catAll" onclick="filterCategory('All', this)">All</div>
         <div class="category-chip" onclick="filterCategory('PUBG Mobile', this)">UC 🏷️</div>
         <div class="category-chip" onclick="filterCategory('Mobile Legends', this)">Diamonds 💎</div>
         <div class="category-chip" onclick="filterCategory('Roblox', this)">Robux 🎮</div>
@@ -442,19 +515,19 @@
     <nav class="bottom-nav">
         <div class="nav-item active">
             <span class="nav-icon">🏠</span>
-            <span>Asosiy</span>
+            <span id="navHome">Asosiy</span>
         </div>
         <div class="nav-item" onclick="sendTopupAction()">
             <span class="nav-icon">👛</span>
-            <span>Hamyon</span>
+            <span id="navWallet">Hamyon</span>
         </div>
         <div class="nav-item">
             <span class="nav-icon">🕒</span>
-            <span>Tarix</span>
+            <span id="navHistory">Tarix</span>
         </div>
         <div class="nav-item">
             <span class="nav-icon">⚙️</span>
-            <span>Sozlamalar</span>
+            <span id="navSettings">Sozlamalar</span>
         </div>
     </nav>
 
@@ -473,12 +546,12 @@
             </div>
 
             <div class="input-group">
-                <label class="input-label" for="playerIdInput">User ID</label>
+                <label class="input-label" id="labelUserId" for="playerIdInput">User ID</label>
                 <input type="text" id="playerIdInput" class="premium-input" placeholder="ID raqamingizni kiriting"
                     inputmode="numeric">
             </div>
 
-            <button class="sheet-btn" onclick="openPaymentMethods()">Tasdiqlash</button>
+            <button class="sheet-btn" id="btnConfirm" onclick="openPaymentMethods()">Tasdiqlash</button>
         </div>
     </div>
 
@@ -486,7 +559,7 @@
     <div class="bottom-sheet-overlay" id="paymentMethodsSheet" onclick="closeSheetOnBackground(event)">
         <div class="bottom-sheet">
             <div class="sheet-handle"></div>
-            <h3 class="sheet-header-title">To'lov usulini tanlang</h3>
+            <h3 class="sheet-header-title" id="titlePaymentMethod">To'lov usulini tanlang</h3>
 
             <div class="payment-methods-grid"
                 style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
@@ -508,266 +581,500 @@
     <div class="bottom-sheet-overlay" id="paymentDetailsSheet" onclick="closeSheetOnBackground(event)">
         <div class="bottom-sheet">
             <div class="sheet-handle"></div>
-            <h3 class="sheet-header-title">To'lov ma'lumotlari</h3>
+            <h3 class="sheet-header-title" id="titlePaymentDetails">To'lov ma'lumotlari</h3>
 
             <div
                 style="background: var(--bg-main); padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
-                <p style="color: var(--text-muted); font-size: 13px; margin: 0 0 4px 0;">Karta raqami (<span
-                        id="selectedPaymentMethod">Uzcard</span>)</p>
+                <p id="labelCardNumber" style="color: var(--text-muted); font-size: 13px; margin: 0 0 4px 0;">Karta
+                    raqami (<span id="selectedPaymentMethod">Uzcard</span>)</p>
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <h2 style="margin: 0; font-size: 18px; letter-spacing: 1px; color: var(--price-color);"
                         id="merchantCardInfo">8600 1234 5678 9012</h2>
-                    <button onclick="copyToClipboard('merchantCardInfo')"
+                    <button onclick="copyToClipboard('merchantCardInfo')" class="btn-copy"
                         style="background: transparent; border: none; color: var(--accent); cursor: pointer; font-size: 16px;">📋
                         Nuxsa</button>
                 </div>
 
                 <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.05); margin: 16px 0;">
 
-                <p style="color: var(--text-muted); font-size: 13px; margin: 0 0 4px 0;">O'tkazma summasi</p>
+                <p id="labelAmount" style="color: var(--text-muted); font-size: 13px; margin: 0 0 4px 0;">O'tkazma
+                    summasi</p>
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <h2 style="margin: 0; font-size: 20px; font-weight: 800;" id="exactAmountToTransfer">0 UZS</h2>
-                    <button onclick="copyToClipboard('exactAmountToTransfer')"
+                    <button onclick="copyToClipboard('exactAmountToTransfer')" class="btn-copy"
                         style="background: transparent; border: none; color: var(--accent); cursor: pointer; font-size: 16px;">📋
                         Nuxsa</button>
                 </div>
-                <p style="color: #ff4757; font-size: 12px; margin: 8px 0 0 0;">⚠️ Diqqat: Summani tiyinlarigacha aniq
+                <p id="labelWarning" style="color: #ff4757; font-size: 12px; margin: 8px 0 0 0;">⚠️ Diqqat: Summani
+                    tiyinlarigacha aniq
                     o'tkazing, aks holda tushmaydi!</p>
             </div>
 
-            <button class="sheet-btn" onclick="checkPaymentStatus()">To'lovni qildim ✅</button>
-            <button class="sheet-btn" onclick="closeAllSheets()"
+            <button class="sheet-btn" id="btnPaid" onclick="checkPaymentStatus()">To'lovni qildim ✅</button>
+            <button class="sheet-btn" id="btnCancel" onclick="closeAllSheets()"
                 style="background: transparent; box-shadow: none; border: 1px solid rgba(255,255,255,0.1); margin-top: 12px; color: var(--text-muted);">Bekor
                 qilish</button>
         </div>
-    </div>
+        <!-- 10. ADMIN MODAL (BOTTOM SHEET) -->
+        <div class="bottom-sheet-overlay" id="adminSheet" onclick="closeSheetOnBackground(event)">
+            <div class="bottom-sheet">
+                <div class="sheet-handle"></div>
+                <h3 class="sheet-header-title">🔧 Admin Panel</h3>
 
-    <!-- MAIN LOGIC -->
-    <script>
-        const tg = window.Telegram.WebApp;
+                <div style="background: var(--bg-main); padding: 16px; border-radius: 12px; margin-bottom: 20px;">
+                    <p style="color: var(--text-muted); font-size: 13px; margin: 0 0 12px 0;">Pending Payments</p>
+                    <div id="adminPaymentsList">
+                        <div class="loading-state">Loading...</div>
+                    </div>
+                </div>
 
-        let currentProductId = null;
-        let allProducts = [];
+                <button class="sheet-btn" onclick="closeAllSheets()"
+                    style="background: transparent; box-shadow: none; border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted);">Yopish</button>
+            </div>
+        </div>
 
-        // API Endpoint for Catalog
-        const API_URL = 'http://localhost:8080/api/catalog';
+        <!-- MAIN LOGIC -->
+        <script>
+            const tg = window.Telegram.WebApp;
 
-        document.addEventListener("DOMContentLoaded", () => {
-            // WebApp Init
-            tg.expand();
-            tg.ready();
-            tg.disableClosingConfirmation();
+            let currentProductId = null;
+            let allProducts = [];
 
-            // Set background color of telegram header to match our dark theme
-            tg.setHeaderColor('#0b0f19');
-            tg.setBackgroundColor('#0b0f19');
+            // App Language State
+            const urlParams = new URLSearchParams(window.location.search);
+            let currentLang = urlParams.get('lang') || 'uz';
 
-            // Setup Header User Info
-            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                const user = tg.initDataUnsafe.user;
-                // If username exists, use it, else first name, else "undefined" like in buypin screenshot
-                const displayName = user.username || user.first_name || 'undefined';
-                document.getElementById('userName').textContent = displayName;
+            const i18n = {
+                "uz": {
+                    "title": "Miqdorni tanlang",
+                    "all": "Barchasi",
+                    "nav_home": "Asosiy",
+                    "nav_wallet": "Hamyon",
+                    "nav_history": "Tarix",
+                    "nav_settings": "Sozlamalar",
+                    "input_label": "User ID",
+                    "input_placeholder": "ID raqamingizni kiriting",
+                    "btn_confirm": "Tasdiqlash",
+                    "payment_title": "To'lov usulini tanlang",
+                    "payment_details_title": "To'lov ma'lumotlari",
+                    "card_number": "Karta raqami",
+                    "amount": "O'tkazma summasi",
+                    "warning": "⚠️ Diqqat: Summani tiyinlarigacha aniq o'tkazing, aks holda tushmaydi!",
+                    "btn_paid": "To'lovni qildim ✅",
+                    "btn_cancel": "Bekor qilish",
+                    "modal_alert_id": "Iltimos, User ID kiriting!",
+                    "modal_alert_copy": "Nusxa olindi: ",
+                    "modal_alert_success": "To'lov qabul qilindi! Iltimos botdagi xabarni kuting.",
+                    "loading": "Yuklanmoqda...",
+                    "no_products": "Tovarlar topilmadi",
+                    "btn_copy": "📋 Nuxsa"
+                },
+                "ru": {
+                    "title": "Выберите категорию",
+                    "all": "Все",
+                    "nav_home": "Главная",
+                    "nav_wallet": "Кошелек",
+                    "nav_history": "История",
+                    "nav_settings": "Настройки",
+                    "input_label": "Ваш ID",
+                    "input_placeholder": "Введите ваш игровой ID",
+                    "btn_confirm": "Подтвердить",
+                    "payment_title": "Выберите способ оплаты",
+                    "payment_details_title": "Реквизиты для оплаты",
+                    "card_number": "Номер карты",
+                    "amount": "Сумма перевода",
+                    "warning": "⚠️ Внимание: Переведите ровно указанную сумму, иначе платеж не пройдет!",
+                    "btn_paid": "Я оплатил(а) ✅",
+                    "btn_cancel": "Отмена",
+                    "modal_alert_id": "Пожалуйста, введите ваш ID!",
+                    "modal_alert_copy": "Скопировано: ",
+                    "modal_alert_success": "Платеж принят! Пожалуйста, ожидайте сообщения в боте.",
+                    "loading": "Загрузка...",
+                    "no_products": "Товары не найдены",
+                    "btn_copy": "📋 Копия"
+                }
+            };
 
-                // Set first letter as default avatar if no photo
-                if (displayName !== 'undefined') {
-                    document.getElementById('defaultAvatar').textContent = displayName.charAt(0).toUpperCase();
+            function applyLanguage() {
+                const lang = i18n[currentLang] || i18n['uz'];
+                document.getElementById('pageTitle').textContent = lang.title;
+                document.getElementById('catAll').textContent = lang.all;
+                document.getElementById('navHome').textContent = lang.nav_home;
+                document.getElementById('navWallet').textContent = lang.nav_wallet;
+                document.getElementById('navHistory').textContent = lang.nav_history;
+                document.getElementById('navSettings').textContent = lang.nav_settings;
+
+                document.getElementById('labelUserId').textContent = lang.input_label;
+                document.getElementById('playerIdInput').placeholder = lang.input_placeholder;
+                document.getElementById('btnConfirm').textContent = lang.btn_confirm;
+
+                document.getElementById('titlePaymentMethod').textContent = lang.payment_title;
+                document.getElementById('titlePaymentDetails').textContent = lang.payment_details_title;
+
+                document.getElementById('labelCardNumber').innerHTML = `${lang.card_number} (<span id="selectedPaymentMethod">Uzcard</span>)`;
+                document.getElementById('labelAmount').textContent = lang.amount;
+                document.getElementById('labelWarning').textContent = lang.warning;
+
+                document.getElementById('btnPaid').textContent = lang.btn_paid;
+                document.getElementById('btnCancel').textContent = lang.btn_cancel;
+
+                document.querySelectorAll('.btn-copy').forEach(btn => btn.textContent = lang.btn_copy);
+            }
+
+            // API Endpoints
+            const API_BASE = window.location.origin;
+
+            document.addEventListener("DOMContentLoaded", async () => {
+                // Apply language first
+                applyLanguage();
+
+                // WebApp Init
+                tg.expand();
+                tg.ready();
+                tg.disableClosingConfirmation();
+
+                // Set background color of telegram header to match our dark theme
+                tg.setHeaderColor('#0b0f19');
+                tg.setBackgroundColor('#0b0f19');
+
+                // Setup Header User Info & Auth
+                let is_admin = false;
+
+                const initData = tg?.initData || 'test_mode=1';
+                try {
+                    const authRes = await fetch(`${API_BASE}/api/auth`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ initData })
+                    });
+                    const authData = await authRes.json();
+                    if (authData.ok) {
+                        is_admin = authData.is_admin;
+                        // Assuming you want to update balance here too: 
+                        // document.getElementById('userBalance').textContent = new Intl.NumberFormat('ru-RU').format(authData.balance);
+                    }
+                } catch (e) {
+                    console.error("Auth error:", e);
                 }
 
-                if (user.photo_url) {
-                    const img = document.getElementById('userAvatarWrap');
-                    img.src = user.photo_url;
-                    img.style.display = 'flex';
-                    document.getElementById('defaultAvatar').style.display = 'none';
+                if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                    const user = tg.initDataUnsafe.user;
+                    const displayName = user.username || user.first_name || 'undefined';
+                    document.getElementById('userName').textContent = displayName;
+
+                    if (displayName !== 'undefined') {
+                        document.getElementById('defaultAvatar').textContent = displayName.charAt(0).toUpperCase();
+                    }
+
+                    if (user.photo_url) {
+                        const img = document.getElementById('userAvatarWrap');
+                        img.src = user.photo_url;
+                        img.style.display = 'flex';
+                        document.getElementById('defaultAvatar').style.display = 'none';
+                    }
+                }
+
+                // Add Admin button dynamically if user is admin
+                if (is_admin) {
+                    const nav = document.querySelector('.bottom-nav');
+                    const adminHtml = `
+                    <div class="nav-btn" onclick="openAdminPanel()">
+                        <span class="nav-icon" style="color:#ff9f43">🔧</span>
+                        <span class="nav-label" id="navAdmin">Admin</span>
+                    </div>`;
+                    nav.insertAdjacentHTML('beforeend', adminHtml);
+                }
+
+                // Sync with Telegram Theme if available
+                if (tg.colorScheme === 'light') toggleTheme(true, 'light');
+                else toggleTheme(true, 'dark');
+
+                // Fetch Data
+                fetchCatalog();
+            });
+
+            async function openAdminPanel() {
+                if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+                closeAllSheets();
+
+                const overlay = document.getElementById('adminSheet');
+                overlay.classList.add('active');
+
+                try {
+                    const res = await fetch(`${API_BASE}/api/admin/payments`);
+                    const data = await res.json();
+                    const list = document.getElementById('adminPaymentsList');
+
+                    if (data.ok && data.data.length > 0) {
+                        list.innerHTML = data.data.map(p => `
+                            <div style="background:var(--bg-card); padding:10px; border-radius:8px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                                <div>
+                                    <strong style="font-size:14px">${p.name || 'User'}</strong><br>
+                                    <small style="color:var(--text-muted)">${new Intl.NumberFormat('ru-RU').format(p.locked_amount)} UZS</small>
+                                </div>
+                                <button onclick="approvePayment(${p.id}, this)" style="background:var(--price-color); border:none; color:white; padding:6px 12px; border-radius:6px; font-weight:bold;">✅</button>
+                            </div>
+                        `).join('');
+                    } else {
+                        list.innerHTML = `<div class="loading-state">Ma'lumot topilmadi.</div>`;
+                    }
+                } catch (e) {
+                    console.error(e);
+                    document.getElementById('adminPaymentsList').innerHTML = `<div class="loading-state">Xatolik yuz berdi.</div>`;
                 }
             }
 
-            // Fetch Data
-            fetchCatalog();
-        });
+            async function approvePayment(id, btnElement) {
+                btnElement.disabled = true;
+                btnElement.textContent = "⏳";
+                try {
+                    const res = await fetch(`${API_BASE}/api/admin/approve`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ payment_id: id })
+                    });
+                    const data = await res.json();
+                    if (data.ok) {
+                        tg.showAlert(data.message);
+                        openAdminPanel(); // Refresh list
+                    } else {
+                        tg.showAlert(data.error);
+                        btnElement.disabled = false;
+                        btnElement.textContent = "✅";
+                    }
+                } catch (e) {
+                    tg.showAlert("API Error");
+                    btnElement.disabled = false;
+                    btnElement.textContent = "✅";
+                }
+            }
 
-        async function fetchCatalog() {
-            try {
-                const response = await fetch(API_URL);
-                if (!response.ok) throw new Error('API Error');
-                const data = await response.json();
+            function toggleTheme(force = false, themeName = '') {
+                const root = document.documentElement;
+                const btn = document.getElementById('themeToggleIcon');
+                let current = root.getAttribute('data-theme') || 'dark';
+                let next = force ? themeName : (current === 'dark' ? 'light' : 'dark');
 
-                if (data.status === 'success') {
-                    allProducts = data.data;
-                    renderProducts(allProducts);
+                root.setAttribute('data-theme', next);
+                if (next === 'light') {
+                    btn.textContent = '🌙';
+                    tg.setHeaderColor('#f4f6f8');
+                    tg.setBackgroundColor('#f4f6f8');
                 } else {
-                    renderMockDataFallback("Failed to load");
+                    btn.textContent = '☀️';
+                    tg.setHeaderColor('#0b0f19');
+                    tg.setBackgroundColor('#0b0f19');
                 }
-            } catch (error) {
-                console.error("Error fetching catalog:", error);
-                renderMockDataFallback(error);
-            }
-        }
-
-        function renderMockDataFallback(err) {
-            allProducts = [
-                { id: "pubg_60", category: "PUBG Mobile", name: "60 UC", price: 11500, icon: "💳" },
-                { id: "pubg_325", category: "PUBG Mobile", name: "325 UC", price: 58000, icon: "📦" },
-                { id: "pubg_660", category: "PUBG Mobile", name: "660 UC", price: 115000, icon: "💰" },
-                { id: "mlbb_86", category: "Mobile Legends", name: "86 💎", price: 16000, icon: "💎" },
-                { id: "roblox_80", category: "Roblox", name: "80 R$", price: 18000, icon: "🎮" }
-            ];
-            renderProducts(allProducts);
-        }
-
-        function renderProducts(products) {
-            const grid = document.getElementById('productsGrid');
-            grid.innerHTML = '';
-
-            if (products.length === 0) {
-                grid.innerHTML = '<div class="loading-state">Tovarlar topilmadi</div>';
-                return;
+                if (tg.HapticFeedback && !force) tg.HapticFeedback.impactOccurred('light');
             }
 
-            products.forEach(p => {
-                const priceFormatted = new Intl.NumberFormat('ru-RU').format(p.price);
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.onclick = () => openBottomSheet(p.id, p.category, p.name, p.price, p.icon);
+            async function fetchCatalog() {
+                try {
+                    const response = await fetch(`${API_BASE}/api/catalog`);
+                    if (!response.ok) throw new Error('API Error');
+                    const data = await response.json();
 
-                card.innerHTML = `
-                    <div class="card-icon">${p.icon || '💳'}</div>
+                    if (data.status === 'success') {
+                        allProducts = data.data;
+                        renderProducts(allProducts);
+                    } else {
+                        renderMockDataFallback("Failed to load");
+                    }
+                } catch (error) {
+                    console.error("Error fetching catalog:", error);
+                    renderMockDataFallback(error);
+                }
+            }
+
+            function renderMockDataFallback(err) {
+                allProducts = [
+                    { id: "pubg_60", category: "PUBG Mobile", name: "60 UC", price: 11500, icon: "images/pubg_uc_1772702840618.png", isImage: true },
+                    { id: "pubg_325", category: "PUBG Mobile", name: "325 UC", price: 58000, icon: "images/pubg_uc_1772702840618.png", isImage: true },
+                    { id: "pubg_660", category: "PUBG Mobile", name: "660 UC", price: 115000, icon: "images/pubg_uc_1772702840618.png", isImage: true },
+                    { id: "mlbb_86", category: "Mobile Legends", name: "86 💎", price: 16000, icon: "images/mlbb_diamond_1772702858620.png", isImage: true },
+                    { id: "roblox_80", category: "Roblox", name: "80 R$", price: 18000, icon: "images/roblox_robux_1772702877156.png", isImage: true }
+                ];
+                renderProducts(allProducts);
+            }
+
+            function renderProducts(products) {
+                const grid = document.getElementById('productsGrid');
+                grid.innerHTML = '';
+
+                if (products.length === 0) {
+                    grid.innerHTML = '<div class="loading-state">' + i18n[currentLang].no_products + '</div>';
+                    return;
+                }
+
+                products.forEach(p => {
+                    const priceFormatted = new Intl.NumberFormat('ru-RU').format(p.price);
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+
+                    // API Fallback Logic for Images
+                    if (!p.isImage && !p.icon) {
+                        if (p.category === 'PUBG Mobile' || p.category === 'PUBG') {
+                            p.icon = "images/pubg_uc_1772702840618.png"; p.isImage = true;
+                        } else if (p.category === 'Mobile Legends' || p.category === 'MLBB') {
+                            p.icon = "images/mlbb_diamond_1772702858620.png"; p.isImage = true;
+                        } else if (p.category === 'Roblox' || p.category === 'ROBLOX') {
+                            p.icon = "images/roblox_robux_1772702877156.png"; p.isImage = true;
+                        }
+                    }
+
+                    let iconHtml = p.isImage ? `<img src="${p.icon}" style="width:40px;height:40px;object-fit:contain;filter:drop-shadow(0 2px 5px rgba(0,0,0,0.4));">` : `<div class="card-icon" style="font-size:24px;">${p.icon || '💳'}</div>`;
+
+                    card.onclick = () => openBottomSheet(p.buyer_sku_code, p.category, p.product_name, p.sell_price, p.icon, p.isImage);
+
+                    card.innerHTML = `
+                    ${iconHtml}
                     <div class="card-info">
-                        <h4 class="card-title">${p.name}</h4>
+                        <h4 class="card-title">${p.product_name}</h4>
                         <p class="card-price">${priceFormatted} UZS</p>
                     </div>
                 `;
-                grid.appendChild(card);
-            });
-        }
-
-        function filterCategory(category, element) {
-            if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
-
-            document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
-            element.classList.add('active');
-
-            if (category === 'All') {
-                renderProducts(allProducts);
-            } else {
-                const filtered = allProducts.filter(p => p.category === category);
-                renderProducts(filtered);
-            }
-        }
-
-        function sendTopupAction() {
-            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-            const data = JSON.stringify({ action: 'topup' });
-            tg.sendData(data);
-        }
-
-        // Bottom Sheet Logic
-        function openBottomSheet(productId, categoryName, productName, productPrice, iconId) {
-            currentProductId = productId;
-            const priceFormatted = new Intl.NumberFormat('ru-RU').format(productPrice);
-
-            document.getElementById('sheetCategoryTitle').textContent = categoryName;
-            document.getElementById('sheetName').textContent = productName;
-            document.getElementById('sheetPrice').textContent = `${priceFormatted} UZS`;
-            document.getElementById('sheetIcon').textContent = iconId || '💳';
-
-            document.getElementById('playerIdInput').value = '';
-
-            const overlay = document.getElementById('bottomSheet');
-            overlay.classList.add('active');
-
-            if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
-        }
-
-        function closeBottomSheet() {
-            document.getElementById('bottomSheet').classList.remove('active');
-            // Do not clear ID yet, user might come back back
-        }
-
-        function closeAllSheets() {
-            document.querySelectorAll('.bottom-sheet-overlay').forEach(el => el.classList.remove('active'));
-            currentProductId = null;
-            pendingPaymentAmount = 0;
-        }
-
-        function closeSheetOnBackground(e) {
-            if (e.target.classList.contains('bottom-sheet-overlay')) {
-                e.target.classList.remove('active');
-            }
-        }
-
-        let pendingPaymentAmount = 0;
-
-        function openPaymentMethods() {
-            const playerId = document.getElementById('playerIdInput').value.trim();
-            if (!playerId) {
-                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
-                tg.showAlert("Iltimos, User ID kiriting!");
-                return;
+                    grid.appendChild(card);
+                });
             }
 
-            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+            function filterCategory(category, element) {
+                if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
 
-            // Switch from Bottom Sheet to Payment Methods
-            document.getElementById('bottomSheet').classList.remove('active');
-            document.getElementById('paymentMethodsSheet').classList.add('active');
-        }
+                document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+                element.classList.add('active');
 
-        function openPaymentDetails(method) {
-            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-
-            document.getElementById('paymentMethodsSheet').classList.remove('active');
-            document.getElementById('selectedPaymentMethod').textContent = method;
-
-            // Generate exact P2P amount based on price + random cents
-            const basePrice = parseInt(document.getElementById('sheetPrice').textContent.replace(/\D/g, ''));
-            const randomAdd = Math.floor(Math.random() * 99) + 1;
-            pendingPaymentAmount = basePrice + randomAdd;
-
-            const priceFormatted = new Intl.NumberFormat('ru-RU').format(pendingPaymentAmount);
-            document.getElementById('exactAmountToTransfer').textContent = `${priceFormatted} UZS`;
-            document.getElementById('exactAmountToTransfer').dataset.raw = pendingPaymentAmount;
-
-            // Mock card numbers based on Method
-            if (method === 'HUMO') {
-                document.getElementById('merchantCardInfo').textContent = "9860 1234 5678 9012";
-            } else {
-                document.getElementById('merchantCardInfo').textContent = "8600 1234 5678 9012";
+                if (category === 'All') {
+                    renderProducts(allProducts);
+                } else {
+                    const filtered = allProducts.filter(p => {
+                        if (category === 'PUBG Mobile') return p.category === 'PUBG';
+                        if (category === 'Mobile Legends') return p.category === 'MLBB';
+                        if (category === 'Roblox') return p.category === 'ROBLOX';
+                        return p.category === category;
+                    });
+                    renderProducts(filtered);
+                }
             }
 
-            document.getElementById('paymentDetailsSheet').classList.add('active');
-        }
+            function sendTopupAction() {
+                if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+                const data = JSON.stringify({ action: 'topup' });
+                tg.sendData(data);
+            }
 
-        function copyToClipboard(elementId) {
-            if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
-            const el = document.getElementById(elementId);
-            const textToCopy = el.dataset.raw ? el.dataset.raw : el.textContent.replace(/\s+/g, '');
+            // Bottom Sheet Logic
+            function openBottomSheet(productId, categoryName, productName, productPrice, iconId, isImg = false) {
+                currentProductId = productId;
+                const priceFormatted = new Intl.NumberFormat('ru-RU').format(productPrice);
 
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                tg.showAlert("Nusxa olindi: " + textToCopy);
-            }).catch(err => {
-                console.error('Copy failure', err);
-            });
-        }
+                document.getElementById('sheetCategoryTitle').textContent = categoryName;
+                document.getElementById('sheetName').textContent = productName;
+                document.getElementById('sheetPrice').textContent = `${priceFormatted} UZS`;
 
-        function checkPaymentStatus() {
-            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+                const sheetIconBox = document.getElementById('sheetIcon');
+                if (isImg) {
+                    sheetIconBox.innerHTML = `<img src="${iconId}" style="width:50px;height:50px;object-fit:contain;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.3));">`;
+                } else {
+                    sheetIconBox.textContent = iconId || '💳';
+                }
 
-            const playerId = document.getElementById('playerIdInput').value.trim();
-            const data = JSON.stringify({
-                action: 'buy',
-                product_id: currentProductId,
-                player_id: playerId,
-                paid_amount: pendingPaymentAmount
-            });
+                document.getElementById('playerIdInput').value = '';
 
-            // Send to Telegram Bot letting it know user claims they paid
-            tg.sendData(data);
+                const overlay = document.getElementById('bottomSheet');
+                overlay.classList.add('active');
 
-            tg.showAlert("To'lov qabul qilindi! Iltimos botdagi xabarni kuting.");
-            closeAllSheets();
-        }
-    </script>
+                if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+            }
+
+            function closeBottomSheet() {
+                document.getElementById('bottomSheet').classList.remove('active');
+                // Do not clear ID yet, user might come back back
+            }
+
+            function closeAllSheets() {
+                document.querySelectorAll('.bottom-sheet-overlay').forEach(el => el.classList.remove('active'));
+                currentProductId = null;
+                pendingPaymentAmount = 0;
+            }
+
+            function closeSheetOnBackground(e) {
+                if (e.target.classList.contains('bottom-sheet-overlay')) {
+                    e.target.classList.remove('active');
+                }
+            }
+
+            let pendingPaymentAmount = 0;
+
+            function openPaymentMethods() {
+                const playerId = document.getElementById('playerIdInput').value.trim();
+                if (!playerId) {
+                    if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
+                    tg.showAlert(i18n[currentLang].modal_alert_id);
+                    return;
+                }
+
+                if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+
+                // Switch from Bottom Sheet to Payment Methods
+                document.getElementById('bottomSheet').classList.remove('active');
+                document.getElementById('paymentMethodsSheet').classList.add('active');
+            }
+
+            function openPaymentDetails(method) {
+                if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+
+                document.getElementById('paymentMethodsSheet').classList.remove('active');
+                document.getElementById('selectedPaymentMethod').textContent = method;
+
+                // Generate exact P2P amount based on price + random cents
+                const basePrice = parseInt(document.getElementById('sheetPrice').textContent.replace(/\D/g, ''));
+                const randomAdd = Math.floor(Math.random() * 99) + 1;
+                pendingPaymentAmount = basePrice + randomAdd;
+
+                const priceFormatted = new Intl.NumberFormat('ru-RU').format(pendingPaymentAmount);
+                document.getElementById('exactAmountToTransfer').textContent = `${priceFormatted} UZS`;
+                document.getElementById('exactAmountToTransfer').dataset.raw = pendingPaymentAmount;
+
+                // Mock card numbers based on Method
+                if (method === 'HUMO') {
+                    document.getElementById('merchantCardInfo').textContent = "9860 1234 5678 9012";
+                } else {
+                    document.getElementById('merchantCardInfo').textContent = "8600 1234 5678 9012";
+                }
+
+                document.getElementById('paymentDetailsSheet').classList.add('active');
+            }
+
+            function copyToClipboard(elementId) {
+                if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+                const el = document.getElementById(elementId);
+                const textToCopy = el.dataset.raw ? el.dataset.raw : el.textContent.replace(/\s+/g, '');
+
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    tg.showAlert(i18n[currentLang].modal_alert_copy + textToCopy);
+                }).catch(err => {
+                    console.error('Copy failure', err);
+                });
+            }
+
+            function checkPaymentStatus() {
+                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+
+                const playerId = document.getElementById('playerIdInput').value.trim();
+                const data = JSON.stringify({
+                    action: 'buy',
+                    product_id: currentProductId,
+                    player_id: playerId,
+                    paid_amount: pendingPaymentAmount
+                });
+
+                // Send to Telegram Bot letting it know user claims they paid
+                tg.sendData(data);
+
+                tg.showAlert(i18n[currentLang].modal_alert_success);
+                closeAllSheets();
+            }
+        </script>
 </body>
 
 </html>

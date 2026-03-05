@@ -28,7 +28,7 @@ dp = Dispatcher()
 
 # URL where the frontend is hosted (Must be HTTPS)
 # User must deploy frontend to GitHub Pages or use ngrok.
-WEBAPP_URL = getenv("WEBAPP_URL", "https://Saterlix.github.io/Digi_bot")
+WEBAPP_URL = getenv("WEBAPP_URL", "https://thunderpay-huhhuku-7744s-projects.vercel.app")
 
 @dp.message(CommandStart())
 async def command_start_handler(message: Message) -> None:

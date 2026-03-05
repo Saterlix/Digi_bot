@@ -3,7 +3,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, WebAppInfo, Inlin
 
 def get_main_menu() -> ReplyKeyboardMarkup:
     """Builds the main menu with a WebApp button."""
-    webapp_url = os.getenv("WEBAPP_URL", "https://saterlix.github.io/Digi_bot")
+    webapp_url = os.getenv("WEBAPP_URL", "https://thunderpay-huhhuku-7744s-projects.vercel.app")
     
     keyboard = ReplyKeyboardMarkup(
         keyboard=[
